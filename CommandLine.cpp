@@ -1,7 +1,7 @@
 /*******************************************************************************
  * CommandLine.cpp
  *
- * Tanner Gower
+ * Tanner G, Jeff Y, Micah J, Mitchell O
  * 2/23/2016
  * Discrete Mathematics I Project
  *
@@ -33,7 +33,7 @@ int main ()
   cout << "------------------------------------------------------------" << endl
        << "                Discrete Mathematics Project" << endl
        << "                             by" << endl
-       << "          Tanner Gower, Jeff Young, MicahJ, Moden" << endl
+       << "            Tanner G, Jeff Y, Micah J, Mitchell O" << endl
        << "------------------------------------------------------------" << endl
        << "Enter graph filename: ";
 

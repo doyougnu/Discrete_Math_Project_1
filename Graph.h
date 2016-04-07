@@ -1,7 +1,7 @@
 /*******************************************************************************
  * Graph.h
  *
- * Tanner Gower, put, your, names, here
+ * Tanner G, Jeff Y, Micah J, Mitchell O
  * 4/5/2016
  * Discrete Mathematics I Project
  *
