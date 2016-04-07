@@ -15,7 +15,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include "Graph.h"
+#include "Tools.h"
 
 using namespace std;
 
@@ -29,9 +31,9 @@ int main ()
          option = "";
 
   cout << "------------------------------------------------------------" << endl
-       << "                    Graph Theory Project" << endl
+       << "                Discrete Mathematics Project" << endl
        << "                             by" << endl
-       << "                        Tanner Gower" << endl
+       << "          Tanner Gower, Jeff Young, MicahJ, Moden" << endl
        << "------------------------------------------------------------" << endl
        << "Enter graph filename: ";
 
@@ -39,7 +41,6 @@ int main ()
   if (!(cin >> file_name)) // Error hecker
   {
     cout << "Error 101: Invalid input" << endl;
-    system("PAUSE>NUL");
     return 101; // invalid input
   }
 
@@ -48,7 +49,6 @@ int main ()
   {
     cout << endl << "Error 404: File \"" << file_name << "\" does not exist!"
          << endl;
-    system("PAUSE>NUL");
     return 404; // haha
   }
 
@@ -58,7 +58,7 @@ int main ()
   if (graph.isLoaded())
     cout << "Success!" << endl;
   else
-    cout << "Failed!" << endl;
+    cout << "Failed!" << endl; // This is completely useless
 
   // Trivial graph information
   cout << endl
@@ -96,9 +96,8 @@ int main ()
           cout << endl
                << "R(G) = " << elim_seq[graph.getVertexNum()] << endl
                << "E(D) = "
-               << Tools::getArrayAsString(elim_seq, graph.getVertexNum())
+               << Tools::getVectorAsString(elim_seq, graph.getVertexNum())
                << endl;
-          // prevent memory leaks
         }
         else
         {
@@ -112,7 +111,6 @@ int main ()
     }
   }
 
-  system("PAUSE>NUL");
   return 0;
 }
 
@@ -129,7 +127,7 @@ void printAlgorithms(Graph graph)
        << "----------------------------------------" << endl
        << "rg - Find and print residue of the graph and elimination "
        << "sequence" << endl
-       << "ag - Find and print the annihilation number" << endl;
+       << "ag - Find and print the annihilation number" << endl
        << "algs - Show available Algorithms" << endl
        << "exit - Close program" << endl;
 }

@@ -21,11 +21,11 @@ class Graph
 {
   public:
     Graph();
-    Graph(std::&ifstream);
+    Graph(std::ifstream&);
 
     // Algorithms
-    vector<int> findKResElimSeq(bool);
-    vector<int> findKResElimSeq(vector<int>, int, bool);
+    std::vector<int> findKResElimSeq(bool);
+    std::vector<int> findKResElimSeq(std::vector<int>, int, bool);
     int findAnnihilationNumber();
 
     // Accessors
@@ -33,7 +33,7 @@ class Graph
     int getVertexNum() const;
     int getResidue() const;
     int getAnnihiltion() const;
-    vector<int> getSequence() const;
+    std::vector<int> getSequence() const;
     bool isLoaded() const;
     std::string getDegreeSequenceAsString() const;
     int getMaxDegree() const;
@@ -41,10 +41,10 @@ class Graph
     int getAverageDegree() const;
 
   private:
-    vector<int> degreeSequence;
+    std::vector<int> degreeSequence;
 
-    vector<Vertex> vertexSet;
-    vector<Edge> edgeSet;
+    std::vector<Vertex> vertexSet;
+    std::vector<Edge> edgeSet;
 
     bool loaded;
 };

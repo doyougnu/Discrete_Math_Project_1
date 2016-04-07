@@ -43,5 +43,5 @@ void Vertex::decrementDegree() { degree--; }
 // ------------------------------------------------------------------------
 // Accessors: Functions that access class members
 // ------------------------------------------------------------------------
-int Vertex::getDegree() { return degree; }
-int Vertex::getId() { return id; }
+int Vertex::getDegree() const { return degree; }
+int Vertex::getId() const { return id; }

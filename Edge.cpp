@@ -40,11 +40,11 @@ Edge::Edge(int f, int t, int w)
 // ------------------------------------------------------------------------
 void Edge::setWeight(int w) { weight = w; }
 void Edge::connectFrom(int f) { from = f; }
-void Edge::connectTo() { to = t; }
+void Edge::connectTo(int t) { to = t; }
 
 // ------------------------------------------------------------------------
 // Accessors: Functions that access class members
 // ------------------------------------------------------------------------
-int Edge::getWeight() { return weight; }
-int Edge::getFrom() { return from; }
-int Edge::getTo() { return to; }
+int Edge::getWeight() const { return weight; }
+int Edge::getFrom() const { return from; }
+int Edge::getTo() const { return to; }

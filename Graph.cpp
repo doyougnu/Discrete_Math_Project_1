@@ -16,6 +16,7 @@
 #include "Tools.h"
 #include <cstdlib>
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -116,7 +117,10 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
   // The first number needs to be less than or equal to n-1, where n is the
   // number of vertices
   if (first_num > n - 1) // negation
-    return false;
+  {
+    seq.push_back(-1);
+    return seq;
+  }
 
   // Swap first and last number in the array
   seq[0] = seq[n - 1];
@@ -128,35 +132,35 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
   n--;
 
   // Sort all but the one we "crossed out" keeping them saved at the end
-  Tools::sortNonIncreasing(&seq, n);
+  Tools::sortNonIncreasing(seq, n);
 
   // Subtract 1 from the first first_num numbers ...yeah
   for (int i = 0; i < first_num; i++)
     seq[i]--;
 
   // Sort before passing the array back through
-  Tools::sortNonIncreasing(&seq, n);
+  Tools::sortNonIncreasing(seq, n);
 
   // Check for base case
   if (Tools::anyNegatives(seq, n)) // Vertices can't have negative degrees
   {
     if (print_steps) // print last "failure" step
-      cout << Tools::getArrayAsString(seq, n) << endl;
+      cout << Tools::getVectorAsString(seq, n) << endl;
     seq.push_back(-1);
     return seq;
   }
   else if (Tools::onlyZeros(seq, n)) // If there's only zeros left
   {
     if (print_steps)
-      cout << Tools::getArrayAsString(seq, n) << endl;
-    Tools::sortNonIncreasing(&seq, vertexSet.size());
+      cout << Tools::getVectorAsString(seq, n) << endl;
+    Tools::sortNonIncreasing(seq, vertexSet.size());
     seq.push_back(Tools::countZeros(degreeSequence, vertexSet.size()));
     return seq; // We're done!
   }
   else if (n <= 1) // If there's not only zeros and we're on the last
   {
     if (print_steps) // print last "failure" step
-      cout << Tools::getArrayAsString(seq, n) << endl;
+      cout << Tools::getVectorAsString(seq, n) << endl;
     seq.push_back(-1);
     return seq; // one, then we can't end up with zeros
   }
@@ -175,7 +179,7 @@ vector<int> Graph::getSequence() const { return degreeSequence; }
 bool Graph::isLoaded() const { return loaded; }
 string Graph::getDegreeSequenceAsString() const
 {
-  return Tools::getArrayAsString(degreeSequence, vertexSet.size());
+  return Tools::getVectorAsString(degreeSequence, vertexSet.size());
 }
 int Graph::getMaxDegree() const
 {

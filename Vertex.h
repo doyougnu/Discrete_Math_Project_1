@@ -31,6 +31,6 @@ class Vertex
   private:
     int degree,
         id; // id could just be the index in the vector<int>, idk
-}
+};
 
 #endif // VERTEX_H

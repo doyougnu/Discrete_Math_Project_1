@@ -168,7 +168,7 @@ int Tools::sumOfAllElements(vector<int> data, const int size)
 // ------------------------------------------------------------------------
 int Tools::findMax(vector<int> data, const int size)
 {
-  if (data)
+  if (data.size() > 0)
   {
     int max = data[0]; // max is the first element
     for (int i = 1; i < size; i++)
@@ -188,7 +188,7 @@ int Tools::findMax(vector<int> data, const int size)
 // ------------------------------------------------------------------------
 int Tools::findMin(vector<int> data, const int size)
 {
-  if (data)
+  if (data.size() > 0)
   {
     int min = data[0]; // max is the first element
     for (int i = 1; i < size; i++)
@@ -209,20 +209,20 @@ int Tools::findMin(vector<int> data, const int size)
 // ------------------------------------------------------------------------
 int Tools::findAverage(vector<int> data, const int size)
 {
-  if (data)
+  if (data.size() > 0)
     return sumOfAllElements(data, size) / size; // pretty self explanatory
   return -1;
 }
 
 // ------------------------------------------------------------------------
-// getArrayAsString: Builds a string representing the array
+// getVectorAsString: Builds a string representing the array
 // data: array to build from
 // size: size of the input array
 // returns a string
 // ------------------------------------------------------------------------
-string Tools::getArrayAsString(vector<int> data, int size)
+string Tools::getVectorAsString(vector<int> data, int size)
 {
-  if (data)
+  if (data.size() > 0)
   {
     stringstream ss;
     for (int i = 0; i < size; i++)

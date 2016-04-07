@@ -32,6 +32,6 @@ class Edge
     int weight,
         from,
         to;
-}
+};
 
 #endif // EDGE_H
