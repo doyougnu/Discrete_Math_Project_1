@@ -56,8 +56,22 @@ Graph::Graph(ifstream& data)
     vertexSet[t].incrementDegree();
   }
 
+  generateDegreeSequence();
+
   loaded = true;
 
+}
+
+// ------------------------------------------------------------------------
+// generateDegreeSequence: Generates a degree sequence from vertex and edge set
+// ------------------------------------------------------------------------
+void Graph::generateDegreeSequence()
+{
+  // Initialize Sequence
+  for (int i = 0; i < vertexSet.size(); i++)
+    degreeSequence.push_back(vertexSet[i].getDegree());
+
+  Tools::sortNonIncreasing(degreeSequence, vertexSet.size());
 }
 
 // ------------------------------------------------------------------------

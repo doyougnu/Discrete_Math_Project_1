@@ -23,6 +23,9 @@ class Graph
     Graph();
     Graph(std::ifstream&);
 
+    // stuff that generates stuff
+    void generateDegreeSequence();
+
     // Algorithms
     std::vector<int> findKResElimSeq(bool);
     std::vector<int> findKResElimSeq(std::vector<int>, int, bool);
