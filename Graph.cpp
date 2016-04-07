@@ -39,6 +39,23 @@ Graph::Graph(ifstream& data)
       num_edges;
   data >> num_vertices >> num_edges;
 
+  for (int v = 0; v < num_vertices; v++)
+  {
+    Vertex vertex(0, v);
+    vertexSet.push_back(vertex);
+  }
+
+  int f, t, w;
+  for (int e = 0; e < num_edges; e++)
+  {
+    data >> f >> t >> w;
+    Edge edge(f, t, w);
+    edgeSet.push_back(edge);
+    vertexSet[f].incrementDegree();
+    vertexSet[t].incrementDegree();
+  }
+
+  loaded = true;
 
 }
 

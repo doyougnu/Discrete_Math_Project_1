@@ -75,7 +75,6 @@ int main ()
 
   printAlgorithms(graph);
 
-  // TODO: Fix this stuff, it wont work right now 
   while (running)
   {
     cout << endl << "Enter a command: ";
@@ -88,11 +87,11 @@ int main ()
       {
         printAlgorithms(graph);
       }
-      else if (option == "rg" && graph.getSequence())
+      else if (option == "rg")
       {
         cout << endl << "Havel-Hakimi Algorithm" << endl;
-        int *elim_seq = graph.findKResElimSeq(true);
-        if (elim_seq)
+        vector<int> elim_seq = graph.findKResElimSeq(true);
+        if (elim_seq[graph.getVertexNum()] != -1)
         {
           cout << endl
                << "R(G) = " << elim_seq[graph.getVertexNum()] << endl
@@ -100,14 +99,13 @@ int main ()
                << Tools::getArrayAsString(elim_seq, graph.getVertexNum())
                << endl;
           // prevent memory leaks
-          delete [] elim_seq;
         }
         else
         {
-          cout << "Sequence is not graphic." << endl;
+          cout << "Sequence is not graphic." << endl; // shit's fucked
         }
       }
-      else if (option == "ag" && graph.getSequence())
+      else if (option == "ag")
         cout << "a(G) = " << graph.findAnnihilationNumber() << endl;
       else
         cout << "\"" << option << "\" is not currently programmed." << endl;
