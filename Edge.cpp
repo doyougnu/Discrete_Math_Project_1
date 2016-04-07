@@ -11,6 +11,9 @@
 *******************************************************************************/
 
 #include "Edge.h"
+#include <sstream>
+
+using namespace std;
 
 // ------------------------------------------------------------------------
 // Edge: Default constructor, creates an edge with no home
@@ -48,3 +51,9 @@ void Edge::connectTo(int t) { to = t; }
 int Edge::getWeight() const { return weight; }
 int Edge::getFrom() const { return from; }
 int Edge::getTo() const { return to; }
+string Edge::toString() const
+{
+  stringstream ss;
+  ss << "(" << from << "," << to << "," << weight << ")";
+  return ss.str();
+}

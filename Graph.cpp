@@ -185,7 +185,7 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
 }
 
 // ------------------------------------------------------------------------
-// Accessors: Various accessors to member variables
+// Accessors: Various accessors to member variables, this is ugly
 // ------------------------------------------------------------------------
 int Graph::getEdgeNum() const { return edgeSet.size(); }
 int Graph::getVertexNum() const { return vertexSet.size(); }
@@ -194,6 +194,24 @@ bool Graph::isLoaded() const { return loaded; }
 string Graph::getDegreeSequenceAsString() const
 {
   return Tools::getVectorAsString(degreeSequence, vertexSet.size());
+}
+string Graph::getEdgeSetAsString() const
+{
+  stringstream ss;
+  for (int e = 0; e < edgeSet.size(); e++)
+  {
+    ss << edgeSet[e].toString();
+    if (e < edgeSet.size() - 1) // don't put a , at the end
+      ss << " ";
+  }
+  return ss.str();
+}
+string Graph::getVertexSetAsString() const
+{
+  vector<int> v; // fuck it
+  for (int i = 0; i < vertexSet.size(); i++)
+    v.push_back(vertexSet[i].getId());
+  return Tools::getVectorAsString(v, vertexSet.size());
 }
 int Graph::getMaxDegree() const
 {

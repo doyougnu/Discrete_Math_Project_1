@@ -67,6 +67,8 @@ int main ()
        << "-------------------------------------------------" << endl
        << "Order: " << graph.getVertexNum() << endl
        << "Edges: " << graph.getEdgeNum() << endl
+       << "Vertex Set: " << graph.getVertexSetAsString() << endl
+       << "Edge Set: " << graph.getEdgeSetAsString() << endl
        << "Degree Sequence: " << graph.getDegreeSequenceAsString() << endl
        << "Maximum Degree: " << graph.getMaxDegree() << endl
        << "Minimum Degree: " << graph.getMinDegree() << endl

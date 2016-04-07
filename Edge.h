@@ -12,6 +12,8 @@
 #ifndef EDGE_H
 #define EDGE_H
 
+#include <string>
+
 class Edge
 {
   public:
@@ -27,6 +29,7 @@ class Edge
     int getWeight() const;
     int getFrom() const;
     int getTo() const;
+    std::string toString() const;
 
   private:
     int weight,

@@ -39,6 +39,8 @@ class Graph
     std::vector<int> getSequence() const;
     bool isLoaded() const;
     std::string getDegreeSequenceAsString() const;
+    std::string getEdgeSetAsString() const;
+    std::string getVertexSetAsString() const;
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
