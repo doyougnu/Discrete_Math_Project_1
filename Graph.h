@@ -20,7 +20,6 @@
 class Graph
 {
   public:
-    Graph();
     Graph(std::ifstream&);
 
     struct GraphSet
@@ -50,10 +49,10 @@ class Graph
     int getResidue() const;
     int getAnnihiltion() const;
     std::vector<int> getSequence() const;
-    bool isLoaded() const;
     std::string getDegreeSequenceAsString() const;
     std::string getEdgeSetAsString() const;
     std::string getVertexSetAsString() const;
+    std::string getGraphInformation() const;
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
@@ -61,8 +60,6 @@ class Graph
   private:
     std::vector<int> degreeSequence;
     GraphSet graphSet;
-
-    bool loaded;
 };
 
 #endif // Graph_H

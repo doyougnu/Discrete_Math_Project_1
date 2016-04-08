@@ -19,14 +19,6 @@
 using namespace std;
 
 // ------------------------------------------------------------------------
-// Graph: Default constructor, creates an empty graph with 0 vertices
-// ------------------------------------------------------------------------
-Graph::Graph()
-{
-  loaded = false;
-}
-
-// ------------------------------------------------------------------------
 // Graph: Constructor for a Graph that loads in graph
 //        data from a file.
 // data: file input stream connected to the verified graph.txt file
@@ -56,9 +48,6 @@ Graph::Graph(ifstream& data)
 
   // sort edgeSet in nondecreasing order by weight
   generateDegreeSequence();
-
-  loaded = true;
-
 }
 
 // ------------------------------------------------------------------------
@@ -225,7 +214,6 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
 int Graph::getEdgeNum() const { return graphSet.edgeSet.size(); }
 int Graph::getVertexNum() const { return graphSet.vertexSet.size(); }
 vector<int> Graph::getSequence() const { return degreeSequence; }
-bool Graph::isLoaded() const { return loaded; }
 string Graph::getDegreeSequenceAsString() const
 {
   return Tools::getVectorAsString(degreeSequence, graphSet.vertexSet.size());
@@ -247,6 +235,27 @@ string Graph::getVertexSetAsString() const
   for (int i = 0; i < graphSet.vertexSet.size(); i++)
     v.push_back(graphSet.vertexSet[i].getId());
   return Tools::getVectorAsString(v, graphSet.vertexSet.size());
+}
+string Graph::getGraphInformation() const
+{
+  stringstream ss;
+
+  // Trivial graph information
+  ss << endl
+     << "-------------------------------------------------" << endl
+     << "                Graph Information                " << endl
+     << "-------------------------------------------------" << endl
+     << "Order: " << getVertexNum() << endl
+     << "Edges: " << getEdgeNum() << endl
+     << "Vertex Set: " << getVertexSetAsString() << endl
+     << "Edge Set: " << getEdgeSetAsString() << endl
+     << "Degree Sequence: " << getDegreeSequenceAsString() << endl
+     << "Maximum Degree: " << getMaxDegree() << endl
+     << "Minimum Degree: " << getMinDegree() << endl
+     << "Average Degree: " << getAverageDegree()
+     << endl;
+
+  return ss.str();
 }
 int Graph::getMaxDegree() const
 {

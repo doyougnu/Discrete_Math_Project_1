@@ -4,7 +4,7 @@ run: CommandLine.o Graph.o Vertex.o Edge.o Tools.o
 CommandLine.o: CommandLine.cpp Graph.h Tools.h
 	g++ -c CommandLine.cpp
 
-Graph.o: Graph.cpp Vertex.h Edge.h Tools.h
+Graph.o: Graph.cpp Graph.h Vertex.h Edge.h Tools.h
 	g++ -c Graph.cpp
 
 Vertex.o: Vertex.cpp Vertex.h

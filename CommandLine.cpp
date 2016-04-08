@@ -44,6 +44,7 @@ int main ()
     return 101; // invalid input
   }
 
+  // Try to open the file
   in_file.open(file_name.c_str());
   if (!in_file) // Check to make sure the file exists/opened
   {
@@ -55,26 +56,10 @@ int main ()
   // Ok now we load stuff
   cout << endl << "Loading graph...";
   Graph graph(in_file);
-  if (graph.isLoaded())
-    cout << "Success!" << endl;
-  else
-    cout << "Failed!" << endl; // This is completely useless
+  cout << "Done!" << endl;
 
-  // Trivial graph information
-  cout << endl
-       << "-------------------------------------------------" << endl
-       << "                Graph Information                " << endl
-       << "-------------------------------------------------" << endl
-       << "Order: " << graph.getVertexNum() << endl
-       << "Edges: " << graph.getEdgeNum() << endl
-       << "Vertex Set: " << graph.getVertexSetAsString() << endl
-       << "Edge Set: " << graph.getEdgeSetAsString() << endl
-       << "Degree Sequence: " << graph.getDegreeSequenceAsString() << endl
-       << "Maximum Degree: " << graph.getMaxDegree() << endl
-       << "Minimum Degree: " << graph.getMinDegree() << endl
-       << "Average Degree: " << graph.getAverageDegree()
-       << endl;
-
+  // Print important info
+  cout << graph.getGraphInformation();
   printAlgorithms(graph);
 
   while (running)
@@ -83,13 +68,19 @@ int main ()
 
     if (cin >> option)
     {
-      if (option == "exit")
+      if (option == "exit") // close program
+      {
         running = false;
-      else if (option == "algs")
+      }
+      else if (option == "algs") // print available algorithms
       {
         printAlgorithms(graph);
       }
-      else if (option == "rg")
+      else if (option == "info") // print trivial graph information
+      {
+        cout << graph.getGraphInformation();
+      }
+      else if (option == "rg") // compute k-residue and elimination sequence
       {
         cout << endl << "Havel-Hakimi Algorithm" << endl;
         vector<int> elim_seq = graph.findKResElimSeq(true);
@@ -131,5 +122,6 @@ void printAlgorithms(Graph graph)
        << "sequence" << endl
        << "ag - Find and print the annihilation number" << endl
        << "algs - Show available Algorithms" << endl
+       << "info - Show trivial Graph information" << endl
        << "exit - Close program" << endl;
 }
