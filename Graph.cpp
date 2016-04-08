@@ -118,7 +118,7 @@ int Graph::findAnnihilationNumber()
 
   return H
 
-  IS THIS RIGHT?
+  IS THIS RIGHT? It should be
 */
 
 // ------------------------------------------------------------------------
