@@ -103,7 +103,7 @@ int main ()
         }
         else
         {
-          cout << "Sequence is not graphic." << endl; // shit's fucked
+          cout << "Sequence is not graphic." << endl;
         }
       }
       else if (option == "ag")

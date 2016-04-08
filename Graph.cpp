@@ -10,8 +10,6 @@
  *
 *******************************************************************************/
 
-// TODO: Write method that generates degree sequence from vertex and edge set
-
 #include "Graph.h"
 #include "Tools.h"
 #include <cstdlib>
@@ -56,6 +54,7 @@ Graph::Graph(ifstream& data)
     vertexSet[t].incrementDegree();
   }
 
+  // sort edgeSet in nondecreasing order by weight
   generateDegreeSequence();
 
   loaded = true;
@@ -63,7 +62,7 @@ Graph::Graph(ifstream& data)
 }
 
 // ------------------------------------------------------------------------
-// generateDegreeSequence: Generates a degree sequence from vertex and edge set
+// generateDegreeSequence: Generates a degree sequence from vertex set
 // ------------------------------------------------------------------------
 void Graph::generateDegreeSequence()
 {
@@ -97,6 +96,41 @@ int Graph::findAnnihilationNumber()
 
   return k;
 }
+
+// ------------------------------------------------------------------------
+// findMinimumSpanningTree: Uses Prim's algorithm to find the Minimum
+//                          spanning tree of this graph object
+// returns a GraphSet
+// ------------------------------------------------------------------------
+/*GraphSet Graph::findMinimumSpanningTree()
+
+  Create GraphSet G initialized with this Graph vertexSet and edgeSet
+  Create GraphSet H
+
+  Add some vertex from this Graph to vertexSet in H
+
+  sort G by weight in nondecreasing order
+
+  While H.vertexSet != G.vertexSet (has same elements, regardless of order)
+    Get edges that can be added that will keep H a tree (eA)
+    if eA.size() > 0
+      Find lowest cost edge in eA (e)
+    else // all remaining edges will make it a cycle
+      return H
+
+    add e to H.edgeSet
+    remove e from G.edgeSet
+
+    if (e.from is not in H.vertexSet)
+      add vertex with id e.from to vertexSet
+    if (e.to is not in H.vertexSet)
+      add vertex with id e.to to vertexSet
+  end while
+
+  return H
+
+  IS THIS RIGHT?
+*/
 
 // ------------------------------------------------------------------------
 // findKResElimSeq: Calls the recursive findKResElimSeq to make it easier
@@ -168,7 +202,7 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
     if (print_steps)
       cout << Tools::getVectorAsString(seq, n) << endl;
     Tools::sortNonIncreasing(seq, vertexSet.size());
-    seq.push_back(Tools::countZeros(degreeSequence, vertexSet.size()));
+    seq.push_back(Tools::countZeros(seq, vertexSet.size()));
     return seq; // We're done!
   }
   else if (n <= 1) // If there's not only zeros and we're on the last
@@ -201,14 +235,14 @@ string Graph::getEdgeSetAsString() const
   for (int e = 0; e < edgeSet.size(); e++)
   {
     ss << edgeSet[e].toString();
-    if (e < edgeSet.size() - 1) // don't put a , at the end
+    if (e < edgeSet.size() - 1) // don't put a space at the end
       ss << " ";
   }
   return ss.str();
 }
 string Graph::getVertexSetAsString() const
 {
-  vector<int> v; // fuck it
+  vector<int> v;
   for (int i = 0; i < vertexSet.size(); i++)
     v.push_back(vertexSet[i].getId());
   return Tools::getVectorAsString(v, vertexSet.size());
