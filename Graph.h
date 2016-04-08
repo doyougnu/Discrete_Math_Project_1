@@ -23,6 +23,12 @@ class Graph
     Graph();
     Graph(std::ifstream&);
 
+    struct GraphSet
+    {
+      std::vector<Vertex> vertexSet;
+      std::vector<Edge> edgeSet;
+    };
+
     // stuff that generates stuff
     void generateDegreeSequence();
 
@@ -54,9 +60,7 @@ class Graph
 
   private:
     std::vector<int> degreeSequence;
-
-    std::vector<Vertex> vertexSet;
-    std::vector<Edge> edgeSet;
+    GraphSet graphSet;
 
     bool loaded;
 };

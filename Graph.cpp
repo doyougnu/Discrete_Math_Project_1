@@ -41,7 +41,7 @@ Graph::Graph(ifstream& data)
   for (int v = 0; v < num_vertices; v++)
   {
     Vertex vertex(0, v);
-    vertexSet.push_back(vertex);
+    graphSet.vertexSet.push_back(vertex);
   }
 
   int f, t, w;
@@ -49,9 +49,9 @@ Graph::Graph(ifstream& data)
   {
     data >> f >> t >> w;
     Edge edge(f, t, w);
-    edgeSet.push_back(edge);
-    vertexSet[f].incrementDegree();
-    vertexSet[t].incrementDegree();
+    graphSet.edgeSet.push_back(edge);
+    graphSet.vertexSet[f].incrementDegree();
+    graphSet.vertexSet[t].incrementDegree();
   }
 
   // sort edgeSet in nondecreasing order by weight
@@ -67,10 +67,10 @@ Graph::Graph(ifstream& data)
 void Graph::generateDegreeSequence()
 {
   // Initialize Sequence
-  for (int i = 0; i < vertexSet.size(); i++)
-    degreeSequence.push_back(vertexSet[i].getDegree());
+  for (int i = 0; i < graphSet.vertexSet.size(); i++)
+    degreeSequence.push_back(graphSet.vertexSet[i].getDegree());
 
-  Tools::sortNonIncreasing(degreeSequence, vertexSet.size());
+  Tools::sortNonIncreasing(degreeSequence, graphSet.vertexSet.size());
 }
 
 // ------------------------------------------------------------------------
@@ -85,7 +85,7 @@ int Graph::findAnnihilationNumber()
   int edge_num = getEdgeNum();
   int k = 0,
       sum = 0;
-  for (int i = vertexSet.size() - 1; i > 0; i--) // Traverse backwards
+  for (int i = graphSet.vertexSet.size() - 1; i > 0; i--) // Traverse backwards
   {
     sum += degreeSequence[i];
     if (sum <= edge_num)
@@ -139,7 +139,8 @@ int Graph::findAnnihilationNumber()
 // ------------------------------------------------------------------------
 vector<int> Graph::findKResElimSeq(bool print_steps)
 {
-  return findKResElimSeq(degreeSequence, vertexSet.size(), print_steps);
+  return findKResElimSeq(degreeSequence, graphSet.vertexSet.size(),
+                         print_steps);
 }
 
 // ------------------------------------------------------------------------
@@ -201,8 +202,8 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
   {
     if (print_steps)
       cout << Tools::getVectorAsString(seq, n) << endl;
-    Tools::sortNonIncreasing(seq, vertexSet.size());
-    seq.push_back(Tools::countZeros(seq, vertexSet.size()));
+    Tools::sortNonIncreasing(seq, graphSet.vertexSet.size());
+    seq.push_back(Tools::countZeros(seq, graphSet.vertexSet.size()));
     return seq; // We're done!
   }
   else if (n <= 1) // If there's not only zeros and we're on the last
@@ -221,21 +222,21 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
 // ------------------------------------------------------------------------
 // Accessors: Various accessors to member variables, this is ugly
 // ------------------------------------------------------------------------
-int Graph::getEdgeNum() const { return edgeSet.size(); }
-int Graph::getVertexNum() const { return vertexSet.size(); }
+int Graph::getEdgeNum() const { return graphSet.edgeSet.size(); }
+int Graph::getVertexNum() const { return graphSet.vertexSet.size(); }
 vector<int> Graph::getSequence() const { return degreeSequence; }
 bool Graph::isLoaded() const { return loaded; }
 string Graph::getDegreeSequenceAsString() const
 {
-  return Tools::getVectorAsString(degreeSequence, vertexSet.size());
+  return Tools::getVectorAsString(degreeSequence, graphSet.vertexSet.size());
 }
 string Graph::getEdgeSetAsString() const
 {
   stringstream ss;
-  for (int e = 0; e < edgeSet.size(); e++)
+  for (int e = 0; e < graphSet.edgeSet.size(); e++)
   {
-    ss << edgeSet[e].toString();
-    if (e < edgeSet.size() - 1) // don't put a space at the end
+    ss << graphSet.edgeSet[e].toString();
+    if (e < graphSet.edgeSet.size() - 1) // don't put a space at the end
       ss << " ";
   }
   return ss.str();
@@ -243,19 +244,19 @@ string Graph::getEdgeSetAsString() const
 string Graph::getVertexSetAsString() const
 {
   vector<int> v;
-  for (int i = 0; i < vertexSet.size(); i++)
-    v.push_back(vertexSet[i].getId());
-  return Tools::getVectorAsString(v, vertexSet.size());
+  for (int i = 0; i < graphSet.vertexSet.size(); i++)
+    v.push_back(graphSet.vertexSet[i].getId());
+  return Tools::getVectorAsString(v, graphSet.vertexSet.size());
 }
 int Graph::getMaxDegree() const
 {
-  return Tools::findMax(degreeSequence, vertexSet.size());
+  return Tools::findMax(degreeSequence, graphSet.vertexSet.size());
 }
 int Graph::getMinDegree() const
 {
-  return Tools::findMin(degreeSequence, vertexSet.size());
+  return Tools::findMin(degreeSequence, graphSet.vertexSet.size());
 }
 int Graph::getAverageDegree() const
 {
-  return Tools::findAverage(degreeSequence, vertexSet.size());
+  return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
