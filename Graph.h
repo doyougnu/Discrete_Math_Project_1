@@ -41,7 +41,7 @@ class Graph
     // Functions
     // bool isTreeAfterAdding(Edge, GraphSet) const;
     // bool isSpanningTree(GraphSet) const;
-    // bool isTree(GraphSet) const;
+    bool isTree(GraphSet);
 
     // Accessors
     int getEdgeNum() const;
