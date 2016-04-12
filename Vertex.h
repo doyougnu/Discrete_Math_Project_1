@@ -28,6 +28,9 @@ class Vertex
     int getDegree() const;
     int getId() const;
 
+    // Operators
+    bool operator==(const Vertex &rhs);
+
   private:
     int degree,
         id; // id could just be the index in the vector<int>, idk

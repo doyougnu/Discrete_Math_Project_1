@@ -45,3 +45,11 @@ void Vertex::decrementDegree() { degree--; }
 // ------------------------------------------------------------------------
 int Vertex::getDegree() const { return degree; }
 int Vertex::getId() const { return id; }
+
+// ------------------------------------------------------------------------
+// Operators: Overloaded operators
+// ------------------------------------------------------------------------
+bool Vertex::operator==(const Vertex &rhs)
+{
+  return (degree == rhs.degree && id == rhs.id);
+}

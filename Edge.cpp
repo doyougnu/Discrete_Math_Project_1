@@ -57,3 +57,13 @@ string Edge::toString() const
   ss << "(" << from << "," << to << "," << weight << ")";
   return ss.str();
 }
+
+// ------------------------------------------------------------------------
+// Operators: Overloaded operators
+// ------------------------------------------------------------------------
+void Edge::operator=(const Edge &rhs)
+{
+  from = rhs.from;
+  to = rhs.to;
+  weight = rhs.weight;
+}

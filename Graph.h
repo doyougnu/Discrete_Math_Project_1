@@ -36,12 +36,15 @@ class Graph
     std::vector<int> findKResElimSeq(std::vector<int>, int, bool);
     int findAnnihilationNumber();
     // GraphSet findMinimumSpanningTree() const;
-    // void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
+    void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
 
     // Functions
     // bool isTreeAfterAdding(Edge, GraphSet) const;
-    // bool isSpanningTree(GraphSet) const;
+    // bool isSpanningTree(GraphSet, GraphSet) const;
     // bool isTree(GraphSet) const;
+
+    // Functions for GraphSets (number sets)
+    bool vertexSetEqual(std::vector<Vertex>, std::vector<Vertex>) const;
 
     // Accessors
     int getEdgeNum() const;

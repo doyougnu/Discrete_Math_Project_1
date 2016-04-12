@@ -46,7 +46,7 @@ Graph::Graph(ifstream& data)
     graphSet.vertexSet[t].incrementDegree();
   }
 
-  // sort edgeSet in nondecreasing order by weight
+  sortEdgeSetByWeightNonDecreasing(graphSet.edgeSet);
   generateDegreeSequence();
 }
 
@@ -92,13 +92,16 @@ int Graph::findAnnihilationNumber()
 // returns a GraphSet
 // ------------------------------------------------------------------------
 /*GraphSet Graph::findMinimumSpanningTree()
+{
+  GraphSet g, h;
+  g.vertexSet = graphSet.vertexSet;
+  g.edgeSet = graphSet.edgeSet;
 
-  Create GraphSet G initialized with this Graph vertexSet and edgeSet
-  Create GraphSet H
+  // Add some vertex from this Graph to vertexSet in H
+  h.vertexSet.push_back(g.vertexSet[0]);
 
-  Add some vertex from this Graph to vertexSet in H
-
-  sort G by weight in nondecreasing order
+  // sort G.edgeSet by weight in nondecreasing order
+  sortEdgeSetByWeightNonDecreasing(g.edgeSet);
 
   While H.vertexSet != G.vertexSet (has same elements, regardless of order)
     Get edges that can be added that will keep H a tree (eA)
@@ -117,9 +120,61 @@ int Graph::findAnnihilationNumber()
   end while
 
   return H
+}*/
 
-  IS THIS RIGHT? It should be
-*/
+// ------------------------------------------------------------------------
+// sortEdgeSetByWeightNonDecreasing: Sorts an edge set by weight
+// edgeSet: edge set to be sorted
+// ------------------------------------------------------------------------
+void Graph::sortEdgeSetByWeightNonDecreasing(vector<Edge> &edgeSet)
+{
+  Edge temp;
+  int max;
+  for (int i = 0; i < edgeSet.size() - 1; i++)
+  {
+    // Start with the first element as the maximum
+    max = i;
+
+    // Loop through elements and check for an element less than max
+    for (int j = i + 1; j < edgeSet.size(); j++)
+      if (edgeSet[j].getWeight() < edgeSet[max].getWeight())
+        max = j;
+
+    // If the maximum element is NOT what we started with, we must swap
+    if (max != i)
+    {
+      temp = edgeSet[i];
+      edgeSet[i] = edgeSet[max];
+      edgeSet[max] = temp;
+    }
+  }
+}
+
+// ------------------------------------------------------------------------
+// vertexSetEqual: checks if both vertex sets have the same elements
+// v1: one of them vertex sets ya gonna checks
+// v2: one of them other vertex sets ya gonna compare
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::vertexSetEqual(vector<Vertex> v1, vector<Vertex> v2) const
+{
+  if (v1.size() != v2.size())
+    return false;
+
+  bool foundMatch = false;
+  for (int i = 0; i < v1.size(); i++)
+  {
+    for (int j = 0; j < v2.size(); j++)
+    {
+      if (v1[i] == v2[j])
+        foundMatch = true;
+    }
+    if (!foundMatch)
+     return false;
+  }
+
+  return true;
+}
 
 // ------------------------------------------------------------------------
 // findKResElimSeq: Calls the recursive findKResElimSeq to make it easier

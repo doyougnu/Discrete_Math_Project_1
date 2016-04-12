@@ -31,6 +31,9 @@ class Edge
     int getTo() const;
     std::string toString() const;
 
+    // Operators
+    void operator=(const Edge &rhs);
+
   private:
     int weight,
         from,
