@@ -325,7 +325,7 @@ int Graph::getAverageDegree() const
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
 
-bool Graph::isTree(GraphSet graphset)
+bool Graph::isTree(GraphSet graphset) const
 {
   return graphset.edgeSet.size() == (graphSet.vertexSet.size() - 1);
 }
