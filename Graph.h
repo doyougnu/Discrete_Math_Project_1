@@ -40,13 +40,8 @@ class Graph
 
     // Functions
     // bool isTreeAfterAdding(Edge, GraphSet) const;
-<<<<<<< HEAD
     // bool isSpanningTree(GraphSet, GraphSet) const;
-    // bool isTree(GraphSet) const;
-=======
-    // bool isSpanningTree(GraphSet) const;
-    bool isTree(GraphSet);
->>>>>>> b427591f1e10c5decb8cc7d207ac4ab8d77f0365
+    bool isTree(GraphSet) const;
 
     // Functions for GraphSets (number sets)
     bool vertexSetEqual(std::vector<Vertex>, std::vector<Vertex>) const;
