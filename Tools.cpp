@@ -226,8 +226,7 @@ string Tools::getVectorAsString(vector<int> data, int size)
   {
     stringstream ss;
     for (int i = 0; i < size; i++)
-      ss << data[i] << " "; // builds a string of array elements delimited by
-                            // a space
+      ss << data[i] << " ";
     return ss.str();
   }
 

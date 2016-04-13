@@ -101,12 +101,12 @@ int main ()
         cout << "a(G) = " << graph.findAnnihilationNumber() << endl;
       else if (option == "mst")
       {
-        cout << endl << "Minimum Spanning Tree using Prim's Algorithm" << endl;
-        Graph::GraphSet result = graph.findMinimumSpanningTree(false);
-        cout << "Vertex Set: "
-             << graph.getVertexSetAsString(result.vertexSet) << endl
-             << "Edge Set: "
-             << graph.getEdgeSetAsString(result.edgeSet) << endl;
+        cout << endl << "Prim's Algorithm" << endl;
+        Graph::GraphSet result = graph.findMinimumSpanningTree(true);
+        cout << "V(G) = { "
+             << graph.getVertexSetAsString(result.vertexSet) << "}" << endl
+             << "E(G) = { "
+             << graph.getEdgeSetAsString(result.edgeSet) << " }" << endl;
       }
       else
         cout << "\"" << option << "\" is not currently programmed." << endl;

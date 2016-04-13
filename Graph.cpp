@@ -98,7 +98,7 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
   g.edgeSet = graphSet.edgeSet;
 
   // Add some vertex from this Graph to vertexSet in H
-  h.vertexSet.push_back(g.vertexSet[0]);
+  h.vertexSet.push_back(g.vertexSet[5]);
 
   // sort G.edgeSet by weight in nondecreasing order
   sortEdgeSetByWeightNonDecreasing(g.edgeSet);
@@ -139,8 +139,9 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
       g.edgeSet.erase(g.edgeSet.begin() + index);
 
     if (print_steps)
-    cout << "Vertex Set: " << getVertexSetAsString(h.vertexSet) << endl
-         << "Edge Set: " << getEdgeSetAsString(h.edgeSet) << endl << endl;
+    cout << "V(G) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
+         << "E(G) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
+         << endl;
     step++;
   }
 
@@ -334,7 +335,7 @@ Vertex Graph::getVertexById(int vertex, GraphSet graph) const
 
 // ------------------------------------------------------------------------
 // getPositionInEdgeSet: finds the index that edge is at. This is needed for
-//                       vector.erase 
+//                       vector.erase
 // edge: edge to search for
 // edgeSet: edge set to look in
 // returns an int
