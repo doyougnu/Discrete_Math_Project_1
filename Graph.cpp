@@ -98,7 +98,7 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
   g.edgeSet = graphSet.edgeSet;
 
   // Add some vertex from this Graph to vertexSet in H
-  h.vertexSet.push_back(g.vertexSet[5]);
+  h.vertexSet.push_back(g.vertexSet[0]);
 
   int step = 1;
   // While H.vertexSet != G.vertexSet (has same elements, regardless of order)
