@@ -197,15 +197,15 @@ bool Graph::isTreeAfterAdding(Edge edge, GraphSet graph, GraphSet from)
 // ------------------------------------------------------------------------
 void Graph::addEdgeToGraphSet(Edge edge, GraphSet &graph, GraphSet from)
 {
-  if (!isEdgeInGraph(edge, graph))
+  if (!isEdgeInGraph(edge, graph)) // Make sure we don't add dupes
   {
     graph.edgeSet.push_back(edge);
 
-    Vertex v = getVertexById(edge.getTo(), from);
+    Vertex v = getVertexById(edge.getTo(), from); // Find the vertex in from
     if (v.getId() != -1)
-      addVertexToGraphSet(v, graph);
+      addVertexToGraphSet(v, graph); // add it if found and if not already added
 
-    v = getVertexById(edge.getFrom(), from);
+    v = getVertexById(edge.getFrom(), from); // same shit here
     if (v.getId() != -1)
       addVertexToGraphSet(v, graph);
 
@@ -231,14 +231,14 @@ void Graph::addVertexToGraphSet(Vertex vertex, GraphSet &graph)
 // ------------------------------------------------------------------------
 bool Graph::isSpanningTree(GraphSet tree, GraphSet graph) const
 {
-  if (!vertexSetEqual(tree, graph))
+  if (!vertexSetEqual(tree, graph)) // Must have same vertex set
     return false;
 
-  for (int i = 0; i < tree.edgeSet.size(); i++)
-    if (!isEdgeInGraph(tree.edgeSet[i], graph))
-      return false;
+  for (int i = 0; i < tree.edgeSet.size(); i++) // Loop through edges in tree
+    if (!isEdgeInGraph(tree.edgeSet[i], graph)) // Those edges are in graph?
+      return false; // If you find one that isn't, return false
 
-  return true;
+  return true; // otherwise, they are all there and YAY
 }
 
 // ------------------------------------------------------------------------
@@ -251,7 +251,7 @@ bool Graph::isEdgeInGraph(Edge edge, GraphSet graph) const
 {
   for (int i = 0; i < graph.edgeSet.size(); i++)
   {
-    if (edge == graph.edgeSet[i])
+    if (edge == graph.edgeSet[i]) // pretty easy to figure this one out
       return true;
   }
   return false;
@@ -267,7 +267,7 @@ bool Graph::isVertexInGraph(Vertex vertex, GraphSet graph) const
 {
   for (int i = 0; i < graph.vertexSet.size(); i++)
   {
-    if (vertex == graph.vertexSet[i])
+    if (vertex == graph.vertexSet[i]) // same shit
       return true;
   }
   return false;
@@ -284,6 +284,8 @@ bool Graph::isTree(GraphSet graphset) const
 
 // ------------------------------------------------------------------------
 // vertexSetEqual: checks if both vertex sets have the same elements
+//                 regardless of order. This treats sets like Number Sets
+//                 in Discrete Math.
 // v1: one of them vertex sets ya gonna checks
 // v2: one of them other vertex sets ya gonna compare
 // returns a bool
@@ -301,11 +303,11 @@ bool Graph::vertexSetEqual(GraphSet g1, GraphSet g2) const
   {
     for (int j = 0; j < v2.size(); j++)
     {
-      if (v1[i] == v2[j])
-        foundMatch = true;
+      if (v1[i] == v2[j]) // Check if element in v1 is anywhere in v2
+        foundMatch = true; // if so, there's a match for the element
     }
-    if (!foundMatch)
-     return false;
+    if (!foundMatch) // If we loop through and never find a match, they aren't
+     return false;   // equal
   }
 
   return true;
@@ -331,7 +333,8 @@ Vertex Graph::getVertexById(int vertex, GraphSet graph) const
 }
 
 // ------------------------------------------------------------------------
-// getPositionInEdgeSet: finds the index that edge is at
+// getPositionInEdgeSet: finds the index that edge is at. This is needed for
+//                       vector.erase 
 // edge: edge to search for
 // edgeSet: edge set to look in
 // returns an int
