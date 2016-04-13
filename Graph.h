@@ -43,6 +43,7 @@ class Graph
     void addEdgeToGraphSet(Edge, GraphSet&, GraphSet);
     void addVertexToGraphSet(Vertex, GraphSet&);
     bool isSpanningTree(GraphSet, GraphSet) const;
+    bool isSpanningTree(GraphSet) const;
     bool isEdgeInGraph(Edge, GraphSet) const;
     bool isVertexInGraph(Vertex, GraphSet) const;
     bool isTree(GraphSet) const;

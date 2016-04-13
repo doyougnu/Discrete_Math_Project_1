@@ -100,9 +100,6 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
   // Add some vertex from this Graph to vertexSet in H
   h.vertexSet.push_back(g.vertexSet[5]);
 
-  // sort G.edgeSet by weight in nondecreasing order
-  sortEdgeSetByWeightNonDecreasing(g.edgeSet);
-
   int step = 1;
   // While H.vertexSet != G.vertexSet (has same elements, regardless of order)
   while (!vertexSetEqual(g, h))
@@ -124,11 +121,7 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
           e = eA[i];
     }
     else // all remaining edges will make it a cycle
-    {
-      if (print_steps)
-        cout << "RESULTS" << endl;
       return h;
-    }
 
     // add e to H.edgeSet
     addEdgeToGraphSet(e, h, g);
@@ -145,8 +138,6 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
     step++;
   }
 
-  if (print_steps)
-    cout << "RESULTS" << endl;
   return h;
 }
 
@@ -240,6 +231,16 @@ bool Graph::isSpanningTree(GraphSet tree, GraphSet graph) const
       return false; // If you find one that isn't, return false
 
   return true; // otherwise, they are all there and YAY
+}
+
+// ------------------------------------------------------------------------
+// isSpanningTree: checks if tree is a spanning tree of this graph
+// tree: tree to check
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isSpanningTree(GraphSet tree) const
+{
+  return isSpanningTree(tree, graphSet);
 }
 
 // ------------------------------------------------------------------------
