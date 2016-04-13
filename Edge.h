@@ -33,6 +33,7 @@ class Edge
 
     // Operators
     void operator=(const Edge &rhs);
+    bool operator==(const Edge &rhs);
 
   private:
     int weight,

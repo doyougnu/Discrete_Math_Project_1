@@ -67,3 +67,7 @@ void Edge::operator=(const Edge &rhs)
   to = rhs.to;
   weight = rhs.weight;
 }
+bool Edge::operator==(const Edge &rhs)
+{
+  return (from == rhs.from && to == rhs.to && weight == rhs.weight);
+}

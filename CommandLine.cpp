@@ -99,6 +99,15 @@ int main ()
       }
       else if (option == "ag")
         cout << "a(G) = " << graph.findAnnihilationNumber() << endl;
+      else if (option == "mst")
+      {
+        cout << endl << "Minimum Spanning Tree using Prim's Algorithm" << endl;
+        Graph::GraphSet result = graph.findMinimumSpanningTree(false);
+        cout << "Vertex Set: "
+             << graph.getVertexSetAsString(result.vertexSet) << endl
+             << "Edge Set: "
+             << graph.getEdgeSetAsString(result.edgeSet) << endl;
+      }
       else
         cout << "\"" << option << "\" is not currently programmed." << endl;
     }
@@ -121,6 +130,7 @@ void printAlgorithms(Graph graph)
        << "rg - Find and print residue of the graph and elimination "
        << "sequence" << endl
        << "ag - Find and print the annihilation number" << endl
+       << "mst - Find and print the minimum spanning tree" << endl
        << "algs - Show available Algorithms" << endl
        << "info - Show trivial Graph information" << endl
        << "exit - Close program" << endl;

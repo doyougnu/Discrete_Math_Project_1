@@ -91,7 +91,7 @@ int Graph::findAnnihilationNumber()
 //                          spanning tree of this graph object
 // returns a GraphSet
 // ------------------------------------------------------------------------
-/*GraphSet Graph::findMinimumSpanningTree()
+Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
 {
   GraphSet g, h;
   g.vertexSet = graphSet.vertexSet;
@@ -103,24 +103,51 @@ int Graph::findAnnihilationNumber()
   // sort G.edgeSet by weight in nondecreasing order
   sortEdgeSetByWeightNonDecreasing(g.edgeSet);
 
-  While H.vertexSet != G.vertexSet (has same elements, regardless of order)
-    Get edges that can be added that will keep H a tree (eA)
-    if eA.size() > 0
-      Find lowest cost edge in eA (e)
+  int step = 1;
+  // While H.vertexSet != G.vertexSet (has same elements, regardless of order)
+  while (!vertexSetEqual(g, h))
+  {
+    if (print_steps)
+      cout << "Step " << step << ": " << endl;
+    // Get edges that can be added that will keep H a tree (eA)
+    vector<Edge> eA;
+    Edge e;
+    for (int i = 0; i < g.edgeSet.size(); i++)
+      if (isTreeAfterAdding(g.edgeSet[i], h, g))
+        eA.push_back(g.edgeSet[i]);
+
+    if (eA.size() > 0)
+    {
+      e = eA[0];
+      for (int i = 1; i < eA.size(); i++)
+        if (eA[i].getWeight() < e.getWeight())
+          e = eA[i];
+    }
     else // all remaining edges will make it a cycle
-      return H
+    {
+      if (print_steps)
+        cout << "RESULTS" << endl;
+      return h;
+    }
 
-    add e to H.edgeSet
-    remove e from G.edgeSet
+    // add e to H.edgeSet
+    addEdgeToGraphSet(e, h, g);
 
-    if (e.from is not in H.vertexSet)
-      add vertex with id e.from to vertexSet
-    if (e.to is not in H.vertexSet)
-      add vertex with id e.to to vertexSet
-  end while
+    // remove e from G.edgeSet
+    int index = getPositionInEdgeSet(e, g.edgeSet);
+    if (index != -1)
+      g.edgeSet.erase(g.edgeSet.begin() + index);
 
-  return H
-}*/
+    if (print_steps)
+    cout << "Vertex Set: " << getVertexSetAsString(h.vertexSet) << endl
+         << "Edge Set: " << getEdgeSetAsString(h.edgeSet) << endl << endl;
+    step++;
+  }
+
+  if (print_steps)
+    cout << "RESULTS" << endl;
+  return h;
+}
 
 // ------------------------------------------------------------------------
 // sortEdgeSetByWeightNonDecreasing: Sorts an edge set by weight
@@ -151,13 +178,121 @@ void Graph::sortEdgeSetByWeightNonDecreasing(vector<Edge> &edgeSet)
 }
 
 // ------------------------------------------------------------------------
+// isTreeAfterAdding: checks if graph will remain a tree after adding edge
+// edge: edge to add
+// graph: graph to add edge to
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isTreeAfterAdding(Edge edge, GraphSet graph, GraphSet from)
+{
+  addEdgeToGraphSet(edge, graph, from);
+  return isTree(graph); // that was easy
+}
+
+// ------------------------------------------------------------------------
+// addEdgeToGraphSet: adds an edge to the graph set and adds the vertex
+//                    without duplicated vertices and edges
+// edge: edge to add
+// graph: graph to add edge to
+// ------------------------------------------------------------------------
+void Graph::addEdgeToGraphSet(Edge edge, GraphSet &graph, GraphSet from)
+{
+  if (!isEdgeInGraph(edge, graph))
+  {
+    graph.edgeSet.push_back(edge);
+
+    Vertex v = getVertexById(edge.getTo(), from);
+    if (v.getId() != -1)
+      addVertexToGraphSet(v, graph);
+
+    v = getVertexById(edge.getFrom(), from);
+    if (v.getId() != -1)
+      addVertexToGraphSet(v, graph);
+
+  }
+}
+
+// ------------------------------------------------------------------------
+// addVertexToGraphSet: adds a vertex to the graph set without duplicates
+// vertex: vertex to add
+// graph: graph to add vertex to
+// ------------------------------------------------------------------------
+void Graph::addVertexToGraphSet(Vertex vertex, GraphSet &graph)
+{
+  if (!isVertexInGraph(vertex, graph))
+    graph.vertexSet.push_back(vertex);
+}
+
+// ------------------------------------------------------------------------
+// isSpanningTree: checks if tree is a spanning tree of graph
+// tree: tree to check
+// graph: graph to check
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isSpanningTree(GraphSet tree, GraphSet graph) const
+{
+  if (!vertexSetEqual(tree, graph))
+    return false;
+
+  for (int i = 0; i < tree.edgeSet.size(); i++)
+    if (!isEdgeInGraph(tree.edgeSet[i], graph))
+      return false;
+
+  return true;
+}
+
+// ------------------------------------------------------------------------
+// isEdgeInGraph: checks if edge is in graph
+// edge: edge to look for in graph
+// graph: graph in question
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isEdgeInGraph(Edge edge, GraphSet graph) const
+{
+  for (int i = 0; i < graph.edgeSet.size(); i++)
+  {
+    if (edge == graph.edgeSet[i])
+      return true;
+  }
+  return false;
+}
+
+// ------------------------------------------------------------------------
+// isVertexInGraph: checks if vertex is in graph
+// vertex: vertex to look for in graph
+// graph: graph in question
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isVertexInGraph(Vertex vertex, GraphSet graph) const
+{
+  for (int i = 0; i < graph.vertexSet.size(); i++)
+  {
+    if (vertex == graph.vertexSet[i])
+      return true;
+  }
+  return false;
+}
+
+// ------------------------------------------------------------------------
+// isTree: checks if the GraphSet represents a Tree
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isTree(GraphSet graphset) const
+{
+  return graphset.edgeSet.size() == (graphset.vertexSet.size() - 1);
+}
+
+// ------------------------------------------------------------------------
 // vertexSetEqual: checks if both vertex sets have the same elements
 // v1: one of them vertex sets ya gonna checks
 // v2: one of them other vertex sets ya gonna compare
 // returns a bool
 // ------------------------------------------------------------------------
-bool Graph::vertexSetEqual(vector<Vertex> v1, vector<Vertex> v2) const
+bool Graph::vertexSetEqual(GraphSet g1, GraphSet g2) const
 {
+  vector<Vertex> v1 = g1.vertexSet;
+  vector<Vertex> v2 = g2.vertexSet;
+
   if (v1.size() != v2.size())
     return false;
 
@@ -174,6 +309,40 @@ bool Graph::vertexSetEqual(vector<Vertex> v1, vector<Vertex> v2) const
   }
 
   return true;
+}
+
+// ------------------------------------------------------------------------
+// getVertexById: finds a vertex in graph by ID, returns a vertex with
+//                data (-1, -1) if not found
+// vertex: id to search for
+// graph: GraphSet to look in
+// returns a Vertex
+// ------------------------------------------------------------------------
+Vertex Graph::getVertexById(int vertex, GraphSet graph) const
+{
+  for (int i = 0; i < graph.vertexSet.size(); i++)
+    if (graph.vertexSet[i].getId() == vertex)
+    {
+      return graph.vertexSet[i];
+    }
+
+  Vertex v(-1, -1);
+  return v;
+}
+
+// ------------------------------------------------------------------------
+// getPositionInEdgeSet: finds the index that edge is at
+// edge: edge to search for
+// edgeSet: edge set to look in
+// returns an int
+// ------------------------------------------------------------------------
+int Graph::getPositionInEdgeSet(Edge edge, vector<Edge> edgeSet) const
+{
+  for (int i = 0; i < edgeSet.size(); i++)
+    if (edgeSet[i] == edge)
+      return i;
+
+  return -1;
 }
 
 // ------------------------------------------------------------------------
@@ -273,23 +442,23 @@ string Graph::getDegreeSequenceAsString() const
 {
   return Tools::getVectorAsString(degreeSequence, graphSet.vertexSet.size());
 }
-string Graph::getEdgeSetAsString() const
+string Graph::getEdgeSetAsString(vector<Edge> edgeSet) const
 {
   stringstream ss;
-  for (int e = 0; e < graphSet.edgeSet.size(); e++)
+  for (int e = 0; e < edgeSet.size(); e++)
   {
-    ss << graphSet.edgeSet[e].toString();
-    if (e < graphSet.edgeSet.size() - 1) // don't put a space at the end
+    ss << edgeSet[e].toString();
+    if (e < edgeSet.size() - 1) // don't put a space at the end
       ss << " ";
   }
   return ss.str();
 }
-string Graph::getVertexSetAsString() const
+string Graph::getVertexSetAsString(vector<Vertex> vertexSet) const
 {
   vector<int> v;
-  for (int i = 0; i < graphSet.vertexSet.size(); i++)
-    v.push_back(graphSet.vertexSet[i].getId());
-  return Tools::getVectorAsString(v, graphSet.vertexSet.size());
+  for (int i = 0; i < vertexSet.size(); i++)
+    v.push_back(vertexSet[i].getId());
+  return Tools::getVectorAsString(v, vertexSet.size());
 }
 string Graph::getGraphInformation() const
 {
@@ -302,8 +471,8 @@ string Graph::getGraphInformation() const
      << "-------------------------------------------------" << endl
      << "Order: " << getVertexNum() << endl
      << "Edges: " << getEdgeNum() << endl
-     << "Vertex Set: " << getVertexSetAsString() << endl
-     << "Edge Set: " << getEdgeSetAsString() << endl
+     << "Vertex Set: " << getVertexSetAsString(graphSet.vertexSet) << endl
+     << "Edge Set: " << getEdgeSetAsString(graphSet.edgeSet) << endl
      << "Degree Sequence: " << getDegreeSequenceAsString() << endl
      << "Maximum Degree: " << getMaxDegree() << endl
      << "Minimum Degree: " << getMinDegree() << endl
@@ -323,9 +492,4 @@ int Graph::getMinDegree() const
 int Graph::getAverageDegree() const
 {
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
-}
-
-bool Graph::isTree(GraphSet graphset) const
-{
-  return graphset.edgeSet.size() == (graphSet.vertexSet.size() - 1);
 }

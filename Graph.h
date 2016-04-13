@@ -35,16 +35,20 @@ class Graph
     std::vector<int> findKResElimSeq(bool);
     std::vector<int> findKResElimSeq(std::vector<int>, int, bool);
     int findAnnihilationNumber();
-    // GraphSet findMinimumSpanningTree() const;
+    GraphSet findMinimumSpanningTree(bool);
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
 
     // Functions
-    // bool isTreeAfterAdding(Edge, GraphSet) const;
-    // bool isSpanningTree(GraphSet, GraphSet) const;
+    bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
+    void addEdgeToGraphSet(Edge, GraphSet&, GraphSet);
+    void addVertexToGraphSet(Vertex, GraphSet&);
+    bool isSpanningTree(GraphSet, GraphSet) const;
+    bool isEdgeInGraph(Edge, GraphSet) const;
+    bool isVertexInGraph(Vertex, GraphSet) const;
     bool isTree(GraphSet) const;
-
-    // Functions for GraphSets (number sets)
-    bool vertexSetEqual(std::vector<Vertex>, std::vector<Vertex>) const;
+    bool vertexSetEqual(GraphSet, GraphSet) const;
+    Vertex getVertexById(int, GraphSet) const;
+    int getPositionInEdgeSet(Edge, std::vector<Edge>) const;
 
     // Accessors
     int getEdgeNum() const;
@@ -53,8 +57,8 @@ class Graph
     int getAnnihiltion() const;
     std::vector<int> getSequence() const;
     std::string getDegreeSequenceAsString() const;
-    std::string getEdgeSetAsString() const;
-    std::string getVertexSetAsString() const;
+    std::string getEdgeSetAsString(std::vector<Edge>) const;
+    std::string getVertexSetAsString(std::vector<Vertex>) const;
     std::string getGraphInformation() const;
     int getMaxDegree() const;
     int getMinDegree() const;
