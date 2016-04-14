@@ -121,7 +121,7 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
           e = eA[i];
     }
     else // all remaining edges will make it a cycle
-      return h;
+      return h; // Probably will never reach here
 
     // add e to H.edgeSet
     addEdgeToGraphSet(e, h, g);
@@ -132,8 +132,8 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
       g.edgeSet.erase(g.edgeSet.begin() + index);
 
     if (print_steps)
-    cout << "V(G) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
-         << "E(G) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
+    cout << "V(H) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
+         << "E(H) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
          << endl;
     step++;
   }
