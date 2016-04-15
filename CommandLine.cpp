@@ -102,7 +102,7 @@ int main ()
       else if (option == "mst")
       {
         cout << endl << "Prim's Algorithm" << endl;
-        Graph::GraphSet result = graph.findMinimumSpanningTree(true);
+        Graph::GraphSet result = graph.findMinimumSpanningTree(0, true);
         if (graph.isSpanningTree(result))
           cout << "Success! Found minimum spanning tree." << endl;
         else

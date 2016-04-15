@@ -91,7 +91,7 @@ int Graph::findAnnihilationNumber()
 //                          spanning tree of this graph object
 // returns a GraphSet
 // ------------------------------------------------------------------------
-Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
+Graph::GraphSet Graph::findMinimumSpanningTree(int start, bool print_steps)
 {
   GraphSet g, h;
   g.vertexSet = graphSet.vertexSet;
@@ -101,38 +101,35 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
       step = 1;
 
   // Add some vertex from this Graph to vertexSet in H
-  h.vertexSet.push_back(g.vertexSet[0]); // We could use a random number here
+  h.vertexSet.push_back(g.vertexSet[start]);
 
-  // While H.vertexSet != G.vertexSet (has same elements, regardless of order)
+  // Loop until the vertex sets of each graphs are equal
   while (!vertexSetEqual(g, h))
   {
-    if (print_steps)
-      cout << "Step " << step << ": " << endl;
-
-    Edge e; // minimum cost edge
+    // find the least cost edge
+    Edge e;
     for (int i = 0; i < g.edgeSet.size(); i++) // Loop through all edges
     {
       if (isTreeAfterAdding(g.edgeSet[i], h, g)) // Find one that can be added
       {
-        e = g.edgeSet[i]; // This will always be the minimum cost edge because
-        break;            // we sorted by weight in non-decreasing order
+        // This will always be the minimum cost edge because
+        // we sorted by weight in non-decreasing order
+        e = g.edgeSet[i];
+
+        // Delete least cost edge e in g
+        g.edgeSet.erase(g.edgeSet.begin() + i);
+        break;
       }
     }
 
-    if (e.getTo() == -1 && e.getFrom() == -1) // No edges can be added
-      return h; // Probably will never reach here
-
-    // add e to H.edgeSet
+    // add e to H.edgeSet as well as vertices
     addEdgeToGraphSet(e, h, g);
-    weight += e.getWeight();
+    weight += e.getWeight(); // Keep track of MST weight
 
-    // remove e from G.edgeSet
-    int index = getPositionInEdgeSet(e, g.edgeSet);
-    if (index != -1)
-      g.edgeSet.erase(g.edgeSet.begin() + index);
-
+    // Print step
     if (print_steps)
-      cout << "V(H) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
+      cout << "Step " << step << ": " << endl
+           << "V(H) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
            << "E(H) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
            << "w(H) = " << weight << endl << endl;
     step++;
@@ -332,22 +329,6 @@ Vertex Graph::getVertexById(int vertex, GraphSet graph) const
 
   Vertex v(-1, -1);
   return v;
-}
-
-// ------------------------------------------------------------------------
-// getPositionInEdgeSet: finds the index that edge is at. This is needed for
-//                       vector.erase
-// edge: edge to search for
-// edgeSet: edge set to look in
-// returns an int
-// ------------------------------------------------------------------------
-int Graph::getPositionInEdgeSet(Edge edge, vector<Edge> edgeSet) const
-{
-  for (int i = 0; i < edgeSet.size(); i++)
-    if (edgeSet[i] == edge)
-      return i;
-
-  return -1;
 }
 
 // ------------------------------------------------------------------------
