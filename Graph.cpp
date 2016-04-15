@@ -97,34 +97,34 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
   g.vertexSet = graphSet.vertexSet;
   g.edgeSet = graphSet.edgeSet;
 
-  // Add some vertex from this Graph to vertexSet in H
-  h.vertexSet.push_back(g.vertexSet[0]);
+  int weight = 0,
+      step = 1;
 
-  int step = 1;
+  // Add some vertex from this Graph to vertexSet in H
+  h.vertexSet.push_back(g.vertexSet[0]); // We could use a random number here
+
   // While H.vertexSet != G.vertexSet (has same elements, regardless of order)
   while (!vertexSetEqual(g, h))
   {
     if (print_steps)
       cout << "Step " << step << ": " << endl;
-    // Get edges that can be added that will keep H a tree (eA)
-    vector<Edge> eA;
-    Edge e;
-    for (int i = 0; i < g.edgeSet.size(); i++)
-      if (isTreeAfterAdding(g.edgeSet[i], h, g))
-        eA.push_back(g.edgeSet[i]);
 
-    if (eA.size() > 0)
+    Edge e; // minimum cost edge
+    for (int i = 0; i < g.edgeSet.size(); i++) // Loop through all edges
     {
-      e = eA[0];
-      for (int i = 1; i < eA.size(); i++)
-        if (eA[i].getWeight() < e.getWeight())
-          e = eA[i];
+      if (isTreeAfterAdding(g.edgeSet[i], h, g)) // Find one that can be added
+      {
+        e = g.edgeSet[i]; // This will always be the minimum cost edge because
+        break;            // we sorted by weight in non-decreasing order
+      }
     }
-    else // all remaining edges will make it a cycle
+
+    if (e.getTo() == -1 && e.getFrom() == -1) // No edges can be added
       return h; // Probably will never reach here
 
     // add e to H.edgeSet
     addEdgeToGraphSet(e, h, g);
+    weight += e.getWeight();
 
     // remove e from G.edgeSet
     int index = getPositionInEdgeSet(e, g.edgeSet);
@@ -132,9 +132,9 @@ Graph::GraphSet Graph::findMinimumSpanningTree(bool print_steps)
       g.edgeSet.erase(g.edgeSet.begin() + index);
 
     if (print_steps)
-    cout << "V(H) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
-         << "E(H) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
-         << endl;
+      cout << "V(H) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
+           << "E(H) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
+           << "w(H) = " << weight << endl << endl;
     step++;
   }
 
