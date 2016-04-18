@@ -56,7 +56,10 @@ int main ()
   // Ok now we load stuff
   cout << endl << "Loading graph...";
   Graph graph(in_file);
-  cout << "Done!" << endl;
+
+  // Error better checkings
+  if (graph.getVertexNum() == 0 || graph.getEdgeNum() == 0)
+    return 122;
 
   // Print important info
   cout << graph.getGraphInformation();

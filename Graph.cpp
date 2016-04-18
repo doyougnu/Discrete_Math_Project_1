@@ -28,26 +28,34 @@ Graph::Graph(ifstream& data)
   // Load in edge number and number of vertices
   int num_vertices,
       num_edges;
-  data >> num_vertices >> num_edges;
 
-  for (int v = 0; v < num_vertices; v++)
+  if (data >> num_vertices >> num_edges)
   {
-    Vertex vertex(0, v);
-    graphSet.vertexSet.push_back(vertex);
-  }
+    for (int v = 0; v < num_vertices; v++)
+    {
+      Vertex vertex(0, v);
+      graphSet.vertexSet.push_back(vertex);
+    }
 
-  int f, t, w;
-  for (int e = 0; e < num_edges; e++)
+    int f, t, w;
+    for (int e = 0; e < num_edges; e++)
+    {
+      data >> f >> t >> w;
+      Edge edge(f, t, w);
+      graphSet.edgeSet.push_back(edge);
+      graphSet.vertexSet[f].incrementDegree();
+      graphSet.vertexSet[t].incrementDegree();
+    }
+
+    sortEdgeSetByWeightNonDecreasing(graphSet.edgeSet);
+    generateDegreeSequence();
+
+    cout << "Done!" << endl;
+  }
+  else
   {
-    data >> f >> t >> w;
-    Edge edge(f, t, w);
-    graphSet.edgeSet.push_back(edge);
-    graphSet.vertexSet[f].incrementDegree();
-    graphSet.vertexSet[t].incrementDegree();
+    cout << "Failed!" << endl;
   }
-
-  sortEdgeSetByWeightNonDecreasing(graphSet.edgeSet);
-  generateDegreeSequence();
 }
 
 // ------------------------------------------------------------------------
@@ -80,7 +88,7 @@ int Graph::findAnnihilationNumber()
     if (sum <= edge_num)
       k++;
     else
-      break; // fuck it...
+      break;
   }
 
   return k;
@@ -250,7 +258,7 @@ bool Graph::isEdgeInGraph(Edge edge, GraphSet graph) const
 {
   for (int i = 0; i < graph.edgeSet.size(); i++)
   {
-    if (edge == graph.edgeSet[i]) // pretty easy to figure this one out
+    if (edge == graph.edgeSet[i])
       return true;
   }
   return false;
@@ -266,7 +274,7 @@ bool Graph::isVertexInGraph(Vertex vertex, GraphSet graph) const
 {
   for (int i = 0; i < graph.vertexSet.size(); i++)
   {
-    if (vertex == graph.vertexSet[i]) // same shit
+    if (vertex == graph.vertexSet[i])
       return true;
   }
   return false;
