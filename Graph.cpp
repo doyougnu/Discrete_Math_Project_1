@@ -136,10 +136,8 @@ Graph::GraphSet Graph::findMinimumSpanningTree(int start, bool print_steps)
 
     // Print step
     if (print_steps)
-      cout << "Step " << step << ": " << endl
-           << "V(H) = { " << getVertexSetAsString(h.vertexSet) << "}" << endl
-           << "E(H) = { " << getEdgeSetAsString(h.edgeSet) << " }" << endl
-           << "w(H) = " << weight << endl << endl;
+      cout << "Step " << step << ": added " << e.toString()
+           << " w(H) = " << weight << endl;
     step++;
   }
 
@@ -441,6 +439,10 @@ string Graph::getEdgeSetAsString(vector<Edge> edgeSet) const
   stringstream ss;
   for (int e = 0; e < edgeSet.size(); e++)
   {
+    stringstream f_mem;
+    f_mem << edgeSet[e].toString();
+    if (ss.str().size() + f_mem.str().size() >= 60 * (ss.str().size() / 60 + 1))
+      ss << endl;
     ss << edgeSet[e].toString();
     if (e < edgeSet.size() - 1) // don't put a space at the end
       ss << " ";

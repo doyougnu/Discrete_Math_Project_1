@@ -226,7 +226,13 @@ string Tools::getVectorAsString(vector<int> data, int size)
   {
     stringstream ss;
     for (int i = 0; i < size; i++)
+    {
+      stringstream f_mem;
+      f_mem << data[i];
+      if (ss.gcount() + f_mem.gcount() >= 60)
+        ss << endl;
       ss << data[i] << " ";
+    }
     return ss.str();
   }
 

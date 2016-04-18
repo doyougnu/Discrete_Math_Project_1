@@ -107,9 +107,15 @@ int main ()
         cout << endl << "Prim's Algorithm" << endl;
         Graph::GraphSet result = graph.findMinimumSpanningTree(0, true);
         if (graph.isSpanningTree(result))
-          cout << "Success! Found minimum spanning tree." << endl;
+          cout << "Success! Found minimum spanning tree."  << endl << endl;
         else
-          cout << "Failed! Could not find minimum spanning tree." << endl;
+          cout << "Failed! Could not find minimum spanning tree." << endl
+               << endl;
+
+        cout << "V(H) = { "
+             << graph.getVertexSetAsString(result.vertexSet) << "}" << endl
+             << "E(H) = { "
+             << graph.getEdgeSetAsString(result.edgeSet) << " }" << endl;
       }
       else
         cout << "\"" << option << "\" is not currently programmed." << endl;
