@@ -49,6 +49,8 @@ class Graph
     bool isTree(GraphSet) const;
     bool vertexSetEqual(GraphSet, GraphSet) const;
     Vertex getVertexById(int, GraphSet) const;
+    std::vector<std::vector<int> > genAllEdges(int);
+    int maxPossibleEdges(int);
 
     // Accessors
     int getEdgeNum() const;

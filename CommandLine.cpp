@@ -117,6 +117,17 @@ int main ()
              << "E(H) = { "
              << graph.getEdgeSetAsString(result.edgeSet) << " }" << endl;
       }
+      else if (option == "gsg")
+        {
+          int numvertices = 0;
+          cout << "Generate a simple graph of n vertices" << endl;
+          cout << "How many vertices: ";
+          cin >> numvertices;
+
+          cout << "testing genEdges" << endl;
+          graph.genAllEdges(numvertices);
+          cout << endl;
+        }
       else
         cout << "\"" << option << "\" is not currently programmed." << endl;
     }
@@ -141,6 +152,7 @@ void printAlgorithms(Graph graph)
        << "ag - Find and print the annihilation number" << endl
        << "mst - Find and print the minimum spanning tree" << endl
        << "algs - Show available Algorithms" << endl
+       << "gsg - Generate simple graphs of n vertices" << endl
        << "info - Show trivial Graph information" << endl
        << "exit - Close program" << endl;
 }

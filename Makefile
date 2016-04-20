@@ -1,5 +1,5 @@
 run: CommandLine.o Graph.o Vertex.o Edge.o Tools.o
-	g++ CommandLine.o Graph.o Vertex.o Edge.o Tools.o -o run
+	g++ -std=c++11 CommandLine.o Graph.o Vertex.o Edge.o Tools.o -o run
 
 CommandLine.o: CommandLine.cpp Graph.h Tools.h
 	g++ -c CommandLine.cpp

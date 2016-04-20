@@ -15,6 +15,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+#include <algorithm> //for next_permutation
 
 using namespace std;
 
@@ -422,6 +423,51 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
   {
     return findKResElimSeq(seq, n, print_steps); // Keep going!
   }
+}
+
+// ------------------------------------------------------------------------
+// genAllEdges: given int n vertices, calculates all possible edges for a
+// graph of n vertices.
+// returns a vector of edges
+// ------------------------------------------------------------------------
+std::vector<std::vector<int> > Graph::genAllEdges(int numvertices)
+{
+  int maxedges = maxPossibleEdges(numvertices);
+  int loopcntr = 0;
+  std::vector<int> vertexSet;
+  std::vector<std::vector<int> > returnEdgeSet;
+
+  //populate vertexSet, will want to use Edge objects later
+  for (int i = 0; i < numvertices; i++)
+    {
+      vertexSet.push_back(i);
+    }
+
+  cout << "the " << numvertices << "! possible permutations" << endl;
+  //permute vertex set and show output
+  do
+    {
+      loopcntr++;
+      //print contents of vector
+      cout << "elements of VertexSet" << " Counter: " << loopcntr << endl;
+      for (int i = 0; i < vertexSet.size(); i++)
+        {
+          cout << " " << vertexSet[i]; 
+        }
+      cout << endl;
+    } while (next_permutation(vertexSet.begin(), vertexSet.end()));
+
+    return returnEdgeSet;
+}
+
+// ------------------------------------------------------------------------
+// maxPossibleEdges: given int n vertices, calculates the maximum number of
+// edge for a given graph
+// returns an int
+// ------------------------------------------------------------------------
+int Graph::maxPossibleEdges(int numvertices)
+{
+  return (numvertices * (numvertices - 1)) / 2;
 }
 
 // ------------------------------------------------------------------------

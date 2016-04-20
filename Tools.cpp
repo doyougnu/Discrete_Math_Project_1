@@ -238,3 +238,41 @@ string Tools::getVectorAsString(vector<int> data, int size)
 
   return "Null Sequence \n";
 }
+
+// ------------------------------------------------------------------------
+// Factorial: just an iterative factorial calculation with some sugar
+// returns an int
+// ------------------------------------------------------------------------
+unsigned long long Tools::factorial(int n) {
+  unsigned long long result = 1;
+  while (n > 1) {
+    result *= n--;
+  }
+  return result;
+}
+
+// ------------------------------------------------------------------------
+// cartesianProduct: just an iterative factorial calculation with some sugar
+// returns an int
+// ------------------------------------------------------------------------
+std::set<std::pair<int, int> > Tools::cartesianProduct
+(vector<int> J , vector<int> M)
+{
+  std::set<std::pair<int, int> > returnSet;
+  vector<pair<int, int> > edges;
+
+  for (int j = 0; j < J.size(); j++)
+    {
+      for (int m = 0; m < M.size(); m++)
+        {
+          edges.push_back(make_pair(J[j], M[m]));
+        }
+    }
+
+  for (int i = 0; i < edges.size(); i++)
+    {
+      returnSet.insert(edges[i]);
+    }
+
+  return returnSet;
+}
