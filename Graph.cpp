@@ -444,19 +444,16 @@ std::vector<std::vector<int> > Graph::genAllEdges(int numvertices)
     }
 
   cout << "the " << numvertices << "! possible permutations" << endl;
-  //permute vertex set and show output
-  do
-    {
-      loopcntr++;
-      //print contents of vector
-      cout << "elements of VertexSet" << " Counter: " << loopcntr << endl;
-      for (int i = 0; i < vertexSet.size(); i++)
-        {
-          cout << " " << vertexSet[i]; 
-        }
-      cout << endl;
-    } while (next_permutation(vertexSet.begin(), vertexSet.end()));
+  std::set<std::vector<int> > testSet;
+  testSet = Tools::noDupCartesianProduct(vertexSet, vertexSet);
 
+
+  //print sets
+  for (set<vector<int> >::iterator i = testSet.begin(); i != testSet.end(); i++)
+    {
+      vector<int> element = *i;
+      cout << element[0] << " : " << element[1] << endl;
+    }
     return returnEdgeSet;
 }
 

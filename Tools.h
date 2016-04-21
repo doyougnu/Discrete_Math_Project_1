@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <algorithm> //for a standard sort
 
 class Tools
 {
@@ -30,7 +31,8 @@ class Tools
    static int findAverage(std::vector<int>, const int);
    static std::string getVectorAsString(std::vector<int>, int);
    static unsigned long long factorial(int);
-   static std::set<std::pair<int,int> > cartesianProduct(std::vector<int>, std::vector<int>);
+   static std::set<std::vector<int> > noDupCartesianProduct
+     (std::vector<int>, std::vector<int>);
 };
 
 #endif // TOOLS_H
