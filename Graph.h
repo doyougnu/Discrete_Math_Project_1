@@ -18,7 +18,7 @@
 class Graph
 {
   public:
-    Graph(std::ifstream&);
+    Graph(std::ifstream&, std::string);
 
     struct GraphSet
     {

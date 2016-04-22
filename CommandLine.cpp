@@ -52,9 +52,18 @@ int main ()
     return 404; // haha
   }
 
+  // get type
+  string type;
+  cout << "Enter graph file type (es, am): ";
+  if (!(cin >> type))
+  {
+    cout << "Unrecognized type!" << endl;
+    return 5;
+  }
+
   // Ok now we load stuff
   cout << endl << "Loading graph...";
-  Graph graph(in_file);
+  Graph graph(in_file, type);
 
   // Error better checkings
   if (graph.getVertexNum() == 0 || graph.getEdgeNum() == 0)

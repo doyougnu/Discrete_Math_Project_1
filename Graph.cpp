@@ -21,38 +21,93 @@ using namespace std;
 //        data from a file.
 // data: file input stream connected to the verified graph.txt file
 // ------------------------------------------------------------------------
-Graph::Graph(ifstream& data)
+Graph::Graph(ifstream& data, string type)
 {
-  // Load in edge number and number of vertices
-  int num_vertices,
-      num_edges;
-
-  if (data >> num_vertices >> num_edges)
+  if (type == "es")
   {
-    for (int v = 0; v < num_vertices; v++)
+    // Load in edge number and number of vertices
+    int num_vertices,
+        num_edges;
+
+    if (data >> num_vertices >> num_edges)
     {
-      Vertex vertex(v);
-      graphSet.vertexSet.push_back(vertex);
-    }
+      for (int v = 0; v < num_vertices; v++)
+      {
+        Vertex vertex(v);
+        graphSet.vertexSet.push_back(vertex);
+      }
 
-    int f, t, w;
-    for (int e = 0; e < num_edges; e++)
+      int f, t, w;
+      for (int e = 0; e < num_edges; e++)
+      {
+        data >> f >> t >> w;
+        Edge edge(f, t, w);
+        graphSet.edgeSet.push_back(edge);
+        graphSet.vertexSet[f].addNeighbor(t);
+        graphSet.vertexSet[t].addNeighbor(f);
+      }
+
+      sortEdgeSetByWeightNonDecreasing(graphSet.edgeSet);
+      generateDegreeSequence();
+
+      cout << "Done loading edge set!" << endl;
+    }
+    else
     {
-      data >> f >> t >> w;
-      Edge edge(f, t, w);
-      graphSet.edgeSet.push_back(edge);
-      graphSet.vertexSet[f].addNeighbor(t);
-      graphSet.vertexSet[t].addNeighbor(f);
+      cout << "Failed loading edge set!" << endl;
     }
+  }
+  else if (type == "am")
+  {
+    int num_vertices;
 
-    sortEdgeSetByWeightNonDecreasing(graphSet.edgeSet);
-    generateDegreeSequence();
+    if (data >> num_vertices)
+    {
+      for (int v = 0; v < num_vertices; v++)
+      {
+        Vertex vertex(v);
+        graphSet.vertexSet.push_back(vertex);
+      }
 
-    cout << "Done!" << endl;
+      vector<vector<int> > matrix;
+      int cell;
+      for (int r = 0; r < num_vertices; r++)
+      {
+        vector<int> row;
+        for (int c = 0; c < num_vertices; c++)
+        {
+          data >> cell;
+          row.push_back(cell);
+        }
+        matrix.push_back(row);
+      }
+
+      for (int f = 0; f < num_vertices; f++)
+      {
+        for (int t = f; t < num_vertices; t++)
+        {
+          if (matrix[f][t] == 1)
+          {
+            Edge edge(f, t, 0);
+            graphSet.edgeSet.push_back(edge);
+            graphSet.vertexSet[f].addNeighbor(t);
+            graphSet.vertexSet[t].addNeighbor(f);
+          }
+        }
+      }
+
+      generateDegreeSequence();
+
+      cout << "Done loading adjacency matrix!" << endl;
+    }
+    else
+    {
+      cout << "Failed loading adjacency matrix!" << endl;
+    }
   }
   else
   {
-    cout << "Failed!" << endl;
+    cout << "Unrecognized graph file type!" << endl;
   }
 }
 
@@ -548,7 +603,7 @@ vector<vector<int> > Graph::findZeroForcingSets()
 
   for (int i = lower_bound; i < getVertexNum() && !found; i++)
   {
-    p = enumerate(i); // i spend too long on this
+    p = enumerate(i);
     for (int j = 0; j < p.size(); j++)
     {
       if (isForcingSet(p[j]))
@@ -560,8 +615,6 @@ vector<vector<int> > Graph::findZeroForcingSets()
   }
 
   return results;
-
-  // yay 25 points
 }
 
 // ------------------------------------------------------------------------
@@ -578,7 +631,7 @@ vector<vector<int> > Graph::findMaximumIndependentSets()
 
   for (int i = upper_bound; i >= 1 && !found; i--)
   {
-    p = enumerate(i); // i spend too long on this
+    p = enumerate(i);
     for (int j = 0; j < p.size(); j++)
     {
       if (isIndependentSet(p[j]))
