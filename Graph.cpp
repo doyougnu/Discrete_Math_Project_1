@@ -564,6 +564,7 @@ vector<vector<int> > Graph::enumerate(int k)
 
   combinations(v_set, k, 0, c, result);
 
+  result.shrink_to_fit();
   return result;
 }
 
@@ -580,6 +581,7 @@ void Graph::combinations(vector<int> set, int l, int s, vector<int> comb,
 {
   if (l == 0)
   {
+    comb.shrink_to_fit();
     save.push_back(comb);
     return;
   }
