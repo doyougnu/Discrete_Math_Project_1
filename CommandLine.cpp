@@ -129,7 +129,6 @@ int main ()
         {
           vector<vector<int> > zgs = graph.findZeroForcingSets();
           cout << "Z(G) = " << zgs[0].size() << endl << endl;
-          cout << zgs.size() << " Sets" << endl;
           printSets(zgs);
           break;
         }
@@ -137,7 +136,6 @@ int main ()
         {
           vector<vector<int> > mis = graph.findMaximumIndependentSets();
           cout << "alpha(G) = " << mis[0].size() << endl << endl;
-          cout << mis.size() << " Sets" << endl;
           printSets(mis);
           break;
         }
@@ -231,6 +229,10 @@ void printAlgorithms(Graph graph)
 
 void printSets(vector<vector<int> > sets)
 {
+  if (sets.size() > 1)
+    cout << sets.size() << " Sets" << endl;
+  else
+    cout << "Set" << endl;
   for (int i = 0; i < sets.size(); i++)
   {
     for (int j = 0; j < sets[i].size(); j++)

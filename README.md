@@ -9,6 +9,7 @@ Here's a [link][1] to our github. Read through the readme for instructions.
 
 ## BRUTEFORCE STUFF
 * Zero Forcing Number and minimum forcing sets
+* Independence number and maximum independent sets
 
 
 [1]: https://github.com/doyougnu/Discrete_Math_Project_1
