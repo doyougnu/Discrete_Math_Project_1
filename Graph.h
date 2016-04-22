@@ -36,6 +36,7 @@ class Graph
     GraphSet findMinimumSpanningTree(int, bool);
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
     std::vector<std::vector<int> > findZeroForcingSets();
+    std::vector<std::vector<int> > findMaximumIndependentSets();
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
@@ -56,6 +57,7 @@ class Graph
     std::vector<std::vector<int> > enumerate(int);
     void combinations(std::vector<int>, int, int, std::vector<int>,
                       std::vector<std::vector<int> >&);
+    bool isIndependentSet(std::vector<int>);
 
     // Accessors
     int getEdgeNum() const;

@@ -20,6 +20,7 @@ class Tools
    static void sortNonDecreasing(std::vector<int>&, int);
    static bool onlyZeros(std::vector<int>, const int);
    static bool anyNegatives(std::vector<int>, const int);
+   static bool isInSet(std::vector<int>, int);
    static int countZeros(std::vector<int>, const int);
    static int countNonZeros(std::vector<int>, const int);
    static int sumOfAllElements(std::vector<int>, const int);

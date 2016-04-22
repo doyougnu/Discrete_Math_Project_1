@@ -114,6 +114,22 @@ bool Tools::anyNegatives(vector<int> data, const int size)
 }
 
 // ------------------------------------------------------------------------
+// isInSet: Checks if value is in the set
+// set: set to check
+// val: value to look for
+// returns a bool
+// ------------------------------------------------------------------------
+bool Tools::isInSet(vector<int> set, int val)
+{
+  for(int i = 0; i < set.size(); i++)
+  {
+    if (set[i] == val)
+      return true;
+  }
+  return false;
+}
+
+// ------------------------------------------------------------------------
 // countZeros: Simply counts the number of zeros in an array of ints
 // data: array to process
 // size: size of the input array
@@ -250,4 +266,3 @@ unsigned long long Tools::factorial(int n) {
   }
   return result;
 }
-

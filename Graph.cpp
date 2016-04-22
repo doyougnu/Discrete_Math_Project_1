@@ -537,7 +537,7 @@ void Graph::combinations(vector<int> set, int l, int s, vector<int> comb,
 
 // ------------------------------------------------------------------------
 // findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
-// returns a vector<int> i'm tired
+// returns a vector<vector<int> > i'm tired
 // ------------------------------------------------------------------------
 vector<vector<int> > Graph::findZeroForcingSets()
 {
@@ -562,6 +562,51 @@ vector<vector<int> > Graph::findZeroForcingSets()
   return results;
 
   // yay 25 points
+}
+
+// ------------------------------------------------------------------------
+// findMaximumIndependentSets: finds maximum independent sets which is also
+// the independence number
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findMaximumIndependentSets()
+{
+  int upper_bound = getVertexNum() - ceil((getVertexNum()-1) / getMaxDegree());
+  vector<vector<int> > results;
+  vector<vector<int> > p;
+  bool found = false;
+
+  for (int i = upper_bound; i >= 1 && !found; i--)
+  {
+    p = enumerate(i); // i spend too long on this
+    for (int j = 0; j < p.size(); j++)
+    {
+      if (isIndependentSet(p[j]))
+      {
+        results.push_back(p[j]);
+        found = true;
+      }
+    }
+  }
+
+  return results;
+}
+
+// ------------------------------------------------------------------------
+// isIndependentSet: checks if set is an independent set of this graph
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isIndependentSet(vector<int> set)
+{
+  for (int v = 0; v < set.size(); v++)
+  {
+    for (int n = 0; n < graphSet.vertexSet[set[v]].getNeighbors().size(); n++)
+    {
+      if (Tools::isInSet(set, graphSet.vertexSet[set[v]].getNeighbors()[n]))
+        return false;
+    }
+  }
+  return true;
 }
 
 // ------------------------------------------------------------------------

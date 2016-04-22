@@ -18,6 +18,7 @@
 using namespace std;
 
 void printAlgorithms(Graph);
+void printSets(vector<vector<int> >);
 
 int main ()
 {
@@ -71,6 +72,11 @@ int main ()
     {
       switch (option)
       {
+        case 0:
+        {
+          running = false;
+          break;
+        }
         case 1:
         {
           cout << endl << "Havel-Hakimi Algorithm" << endl;
@@ -115,38 +121,35 @@ int main ()
           vector<vector<int> > zgs = graph.findZeroForcingSets();
           cout << "Z(G) = " << zgs[0].size() << endl << endl;
           cout << zgs.size() << " Sets" << endl;
-          for (int i = 0; i < zgs.size(); i++)
-          {
-            for (int j = 0; j < zgs[i].size(); j++)
-            {
-              cout << zgs[i][j] << " ";
-            }
-            cout << endl;
-          }
+          printSets(zgs);
           break;
         }
         case 5:
         {
-          cout << "removed, keeping this as placeholder" << endl;
+          vector<vector<int> > mis = graph.findMaximumIndependentSets();
+          cout << "alpha(G) = " << mis[0].size() << endl << endl;
+          cout << mis.size() << " Sets" << endl;
+          printSets(mis);
           break;
         }
-        case 101:
+        case 6:
         {
-          vector<int> fs;
-          int id = 0;
-          cout << "Enter up to " << graph.getVertexNum()
-               << " vertices from 0 to " << graph.getVertexNum() - 1
-               << " (enter -1 to start): " << endl;
-          cin >> id;
-          while (id != -1)
-          {
-            fs.push_back(id);
-            cin >> id;
-          }
-          if (graph.isForcingSet(fs))
-            cout << "Yes!" << endl;
-          else
-            cout << "No!" << endl;
+          cout << "Look! A clique number!" << endl;
+          break;
+        }
+        case 7:
+        {
+          cout << "Look! A chromatic number!" << endl;
+          break;
+        }
+        case 8:
+        {
+          cout << "Look! A domination number!" << endl;
+          break;
+        }
+        case 9:
+        {
+          cout << "Look! A total domination number stuff!" << endl;
           break;
         }
         case 10:
@@ -159,9 +162,23 @@ int main ()
           cout << graph.getGraphInformation();
           break;
         }
-        case 12:
+        case 101: // testing stuff
         {
-          running = false;
+          vector<int> fs;
+          int id = 0;
+          cout << "Enter up to " << graph.getVertexNum()
+               << " vertices from 0 to " << graph.getVertexNum() - 1
+               << " (enter -1 to start): " << endl;
+          cin >> id;
+          while (id != -1)
+          {
+            fs.push_back(id);
+            cin >> id;
+          }
+          if (graph.isIndependentSet(fs))
+            cout << "Yes!" << endl;
+          else
+            cout << "No!" << endl;
           break;
         }
         default:
@@ -188,13 +205,29 @@ void printAlgorithms(Graph graph)
        << "----------------------------------------" << endl
        << "        Algorithms and Functions        " << endl
        << "----------------------------------------" << endl
+       << "0. Close program" << endl
        << "1. Find and print residue of the graph and elimination "
        << "sequence" << endl
        << "2. Find and print the annihilation number" << endl
        << "3. Find and print the minimum spanning tree" << endl
        << "4. Find all minimum forcing sets and zero forcing number" << endl
-       << "5. Generate simple graphs of n vertices" << endl
+       << "5. Find all maximum independent sets and independence number" << endl
+       << "6. Find all maximum cliques and clique number" << endl
+       << "7. Find the chromatic number" << endl
+       << "8. Find all minimum dominating sets and domination number" << endl
+       << "9. Find total domination stuff?" << endl
        << "10. Show available Algorithms" << endl
-       << "11. Show trivial Graph information" << endl
-       << "12. Close program" << endl;
+       << "11. Show trivial Graph information" << endl;
+}
+
+void printSets(vector<vector<int> > sets)
+{
+  for (int i = 0; i < sets.size(); i++)
+  {
+    for (int j = 0; j < sets[i].size(); j++)
+    {
+      cout << sets[i][j] << " ";
+    }
+    cout << endl;
+  }
 }
