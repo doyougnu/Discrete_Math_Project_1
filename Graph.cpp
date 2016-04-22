@@ -574,20 +574,27 @@ void Graph::combinations(vector<int> set, int l, int s, vector<int> comb,
 // findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
 // returns a vector<int> i'm tired
 // ------------------------------------------------------------------------
-vector<int> Graph::findZeroForcingSet()
+vector<vector<int> > Graph::findZeroForcingSets()
 {
   int lower_bound = getMinDegree(); // From Teach's paper, thanks Teach
+  vector<vector<int> > results;
   vector<vector<int> > p;
+  bool found = false;
 
-  for (int i = lower_bound; i < getVertexNum(); i++)
+  for (int i = lower_bound; i < getVertexNum() && !found; i++)
   {
     p = enumerate(i); // i spend too long on this
     for (int j = 0; j < p.size(); j++)
     {
       if (isForcingSet(p[j]))
-        return p[j];
+      {
+        results.push_back(p[j]);
+        found = true;
+      }
     }
   }
+
+  return results;
 
   // yay 25 points
 }

@@ -114,9 +114,17 @@ int main ()
         }
         case 4:
         {
-          vector<int> zgs = graph.findZeroForcingSet();
-          cout << "Z(G) = " << zgs.size() << endl;
-          cout << "Set: " << Tools::getVectorAsString(zgs, zgs.size()) << endl;
+          vector<vector<int> > zgs = graph.findZeroForcingSets();
+          cout << "Z(G) = " << zgs[0].size() << endl << endl;
+          cout << zgs.size() << " Sets" << endl;
+          for (int i = 0; i < zgs.size(); i++)
+          {
+            for (int j = 0; j < zgs[i].size(); j++)
+            {
+              cout << zgs[i][j] << " ";
+            }
+            cout << endl;
+          }
           break;
         }
         case 5:
@@ -193,7 +201,7 @@ void printAlgorithms(Graph graph)
        << "sequence" << endl
        << "2. Find and print the annihilation number" << endl
        << "3. Find and print the minimum spanning tree" << endl
-       << "4. Find zero forcing number and a set" << endl
+       << "4. Find all minimum forcing sets and zero forcing number" << endl
        << "5. Generate simple graphs of n vertices" << endl
        << "10. Show available Algorithms" << endl
        << "11. Show trivial Graph information" << endl

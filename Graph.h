@@ -37,7 +37,7 @@ class Graph
     int findAnnihilationNumber();
     GraphSet findMinimumSpanningTree(int, bool);
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
-    std::vector<int> findZeroForcingSet();
+    std::vector<std::vector<int> > findZeroForcingSets();
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
