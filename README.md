@@ -7,6 +7,9 @@ Here's a [link][1] to our github. Read through the readme for instructions.
 * [Havel-Hakimi Algorithm][3]
 * [Annihilation Number Algorithm][4]
 
+## BRUTEFORCE STUFF
+* Zero Forcing Number and minimum forcing sets
+
 
 [1]: https://github.com/doyougnu/Discrete_Math_Project_1
 [2]: https://en.wikipedia.org/wiki/Prim's_algorithm
