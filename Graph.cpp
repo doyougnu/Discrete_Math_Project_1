@@ -34,7 +34,7 @@ Graph::Graph(ifstream& data)
   {
     for (int v = 0; v < num_vertices; v++)
     {
-      Vertex vertex(0, v);
+      Vertex vertex(v);
       graphSet.vertexSet.push_back(vertex);
     }
 
@@ -44,8 +44,8 @@ Graph::Graph(ifstream& data)
       data >> f >> t >> w;
       Edge edge(f, t, w);
       graphSet.edgeSet.push_back(edge);
-      graphSet.vertexSet[f].incrementDegree();
-      graphSet.vertexSet[t].incrementDegree();
+      graphSet.vertexSet[f].addNeighbor(t);
+      graphSet.vertexSet[t].addNeighbor(f);
     }
 
     sortEdgeSetByWeightNonDecreasing(graphSet.edgeSet);
@@ -334,7 +334,7 @@ Vertex Graph::getVertexById(int vertex, GraphSet graph) const
       return graph.vertexSet[i];
     }
 
-  Vertex v(-1, -1);
+  Vertex v(-1);
   return v;
 }
 
@@ -465,6 +465,131 @@ std::vector<std::vector<int> > Graph::genAllEdges(int numvertices)
 int Graph::maxPossibleEdges(int numvertices)
 {
   return (numvertices * (numvertices - 1)) / 2;
+}
+
+// ------------------------------------------------------------------------
+// isForcingSet: checks if this set is a forcing set of this graph with
+// some salt or some shit i guess
+// set: vertex set to check
+// returns a damn bool
+// ------------------------------------------------------------------------
+bool Graph::isForcingSet(vector<int> set)
+{
+
+  vector<Vertex> c_set, v_set;
+
+  for (int i = 0; i < graphSet.vertexSet.size(); i++)
+    v_set.push_back(graphSet.vertexSet[i]);
+
+  for (int i = 0; i < set.size(); i++)
+  {
+    c_set.push_back(graphSet.vertexSet[set[i]]);
+    v_set[c_set.back().getId()].setColor(1);
+  }
+
+  int id = anyVertexWithExactlyOneNonColoredNeighbor(c_set, v_set);
+  while (id != -1)
+  {
+    c_set.push_back(graphSet.vertexSet[id]);
+    v_set[c_set.back().getId()].setColor(1);
+
+    id = anyVertexWithExactlyOneNonColoredNeighbor(c_set, v_set);
+  }
+  return c_set.size() == v_set.size();
+}
+
+// ------------------------------------------------------------------------
+// anyVertexWithExactlyOneColoredNeighbor: returns the index if found,
+//  -1 if not
+// set: vertex set to check
+// v_set: vertex set
+// returns an int
+// ------------------------------------------------------------------------
+int Graph::anyVertexWithExactlyOneNonColoredNeighbor(vector<Vertex> set,
+                                                  vector<Vertex> v_set) const
+{
+  for (int i = 0; i < set.size(); i++)
+  {
+    int n = 0;
+    for (int j = 0; j < set[i].getNeighbors().size(); j++)
+    {
+      if (v_set[set[i].getNeighbors()[j]].getColor() == 0)
+       n++;
+    }
+    if (n == 1)
+    {
+      for (int j = 0; j < set[i].getNeighbors().size(); j++)
+        if (v_set[set[i].getNeighbors()[j]].getColor() == 0)
+          return set[i].getNeighbors()[j];
+    }
+  }
+  return -1;
+}
+
+// ------------------------------------------------------------------------
+// enumerate: enumerates all combinations of num_vertices choose k
+// k: elements per combination
+// returns a vector<vector<int>>
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::enumerate(int k)
+{
+  vector<vector<int> > result;
+  vector<int> c, v_set;
+
+  for (int i = 0; i < k; i++)
+    c.push_back(0);
+
+  for (int i = 0; i < getVertexNum(); i++)
+    v_set.push_back(i);
+
+  combinations(v_set, k, 0, c, result);
+
+  return result;
+}
+
+// ------------------------------------------------------------------------
+// combinations: recursive function for combos
+// set: set to make combinations from
+// l: your k
+// s: starting point
+// comb: single combination
+// save: all combinations saved
+// ------------------------------------------------------------------------
+void Graph::combinations(vector<int> set, int l, int s, vector<int> comb,
+                         vector<vector<int> >& save)
+{
+  if (l == 0)
+  {
+    save.push_back(comb);
+    return;
+  }
+  for (int i = s; i <= set.size() - l; i++)
+  {
+    comb[comb.size() - l] = set[i];
+    combinations(set, l-1, i+1, comb, save);
+  }
+}
+
+// ------------------------------------------------------------------------
+// findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
+// returns a vector<int> i'm tired
+// ------------------------------------------------------------------------
+vector<int> Graph::findZeroForcingSet()
+{
+  int lower_bound = getMinDegree(); // From Teach's paper, thanks Teach
+  vector<vector<int> > p;
+
+  for (int i = lower_bound; i < getVertexNum(); i++)
+  {
+    p = enumerate(i); // i spend too long on this
+    for (int j = 0; j < p.size(); j++)
+    {
+      if (isForcingSet(p[j]))
+        return p[j];
+    }
+  }
+
+  // yay 25 points
 }
 
 // ------------------------------------------------------------------------

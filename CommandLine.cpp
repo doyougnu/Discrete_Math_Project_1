@@ -128,6 +128,30 @@ int main ()
           graph.genAllEdges(numvertices);
           cout << endl;
         }
+      else if (option == "fs")
+      {
+        vector<int> fs;
+        int id = 0;
+        cout << "Enter up to " << graph.getVertexNum()
+             << " vertices from 0 to " << graph.getVertexNum() - 1
+             << " (enter -1 to start): " << endl;
+        cin >> id;
+        while (id != -1)
+        {
+          fs.push_back(id);
+          cin >> id;
+        }
+        if (graph.isForcingSet(fs))
+          cout << "Yes!" << endl;
+        else
+          cout << "No!" << endl;
+      }
+      else if (option == "zg")
+      {
+        vector<int> zgs = graph.findZeroForcingSet();
+        cout << "Z(G) = " << zgs.size() << endl;
+        cout << "Set: " << Tools::getVectorAsString(zgs, zgs.size()) << endl;
+      }
       else
         cout << "\"" << option << "\" is not currently programmed." << endl;
     }
@@ -151,8 +175,9 @@ void printAlgorithms(Graph graph)
        << "sequence" << endl
        << "ag - Find and print the annihilation number" << endl
        << "mst - Find and print the minimum spanning tree" << endl
-       << "algs - Show available Algorithms" << endl
+       << "zg - Find zero forcing number and a set" << endl
        << "gsg - Generate simple graphs of n vertices" << endl
+       << "algs - Show available Algorithms" << endl
        << "info - Show trivial Graph information" << endl
        << "exit - Close program" << endl;
 }

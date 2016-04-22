@@ -11,14 +11,15 @@
 *******************************************************************************/
 
 #include "Vertex.h"
+#include <iostream>
 
 // ------------------------------------------------------------------------
 // Vertex: Default constructor, creates a vertex with 0 degree and -1 id
 // ------------------------------------------------------------------------
 Vertex::Vertex()
 {
-  degree = 0;
   id = -1;
+  color = 0;
 }
 
 // ------------------------------------------------------------------------
@@ -26,30 +27,31 @@ Vertex::Vertex()
 // d: degree
 // i: id
 // ------------------------------------------------------------------------
-Vertex::Vertex(int d, int i)
+Vertex::Vertex(int i)
 {
-  degree = d;
   id = i;
+  color = 0;
 }
 
 // ------------------------------------------------------------------------
 // Mutators: Functions that change class members
 // ------------------------------------------------------------------------
 void Vertex::setId(int i) { id = i; }
-void Vertex::setDegree(int d) { degree = d; }
-void Vertex::incrementDegree() { degree++; }
-void Vertex::decrementDegree() { degree--; }
+void Vertex::addNeighbor(int v) { neighbors.push_back(v); }
+void Vertex::setColor(int c) { color = c; }
 
 // ------------------------------------------------------------------------
 // Accessors: Functions that access class members
 // ------------------------------------------------------------------------
-int Vertex::getDegree() const { return degree; }
+int Vertex::getDegree() const { return neighbors.size(); }
 int Vertex::getId() const { return id; }
+int Vertex::getColor() const { return color; }
+std::vector<int> Vertex::getNeighbors() const { return neighbors; }
 
 // ------------------------------------------------------------------------
 // Operators: Overloaded operators
 // ------------------------------------------------------------------------
 bool Vertex::operator==(const Vertex &rhs)
 {
-  return (degree == rhs.degree && id == rhs.id);
+  return (id == rhs.id && color == rhs.color);
 }

@@ -37,6 +37,7 @@ class Graph
     int findAnnihilationNumber();
     GraphSet findMinimumSpanningTree(int, bool);
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
+    std::vector<int> findZeroForcingSet();
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
@@ -51,6 +52,12 @@ class Graph
     Vertex getVertexById(int, GraphSet) const;
     std::vector<std::vector<int> > genAllEdges(int);
     int maxPossibleEdges(int);
+    bool isForcingSet(std::vector<int>);
+    int anyVertexWithExactlyOneNonColoredNeighbor(std::vector<Vertex>,
+                                               std::vector<Vertex>) const;
+    std::vector<std::vector<int> > enumerate(int);
+    void combinations(std::vector<int>, int, int, std::vector<int>,
+                      std::vector<std::vector<int> >&);
 
     // Accessors
     int getEdgeNum() const;

@@ -12,28 +12,32 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
+#include <vector>
+
 class Vertex
 {
   public:
     Vertex();
-    Vertex(int, int);
+    Vertex(int);
 
     // Mutators
     void setId(int);
-    void setDegree(int);
-    void incrementDegree();
-    void decrementDegree();
+    void addNeighbor(int);
+    void setColor(int);
 
     // Accessors
     int getDegree() const;
+    std::vector<int> getNeighbors() const;
     int getId() const;
-
+    int getColor() const;
+    
     // Operators
     bool operator==(const Vertex &rhs);
 
   private:
-    int degree,
-        id; // id could just be the index in the vector<int>, idk
+    int id,
+        color;
+    std::vector<int> neighbors;
 };
 
 #endif // VERTEX_H
