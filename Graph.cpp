@@ -12,10 +12,7 @@
 
 #include "Graph.h"
 #include "Tools.h"
-#include <cstdlib>
-#include <sstream>
-#include <iostream>
-#include <algorithm> //for next_permutation
+#include "libs.h"
 
 using namespace std;
 
@@ -423,38 +420,6 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
   {
     return findKResElimSeq(seq, n, print_steps); // Keep going!
   }
-}
-
-// ------------------------------------------------------------------------
-// genAllEdges: given int n vertices, calculates all possible edges for a
-// graph of n vertices.
-// returns a vector of edges
-// ------------------------------------------------------------------------
-std::vector<std::vector<int> > Graph::genAllEdges(int numvertices)
-{
-  int maxedges = maxPossibleEdges(numvertices);
-  int loopcntr = 0;
-  std::vector<int> vertexSet;
-  std::vector<std::vector<int> > returnEdgeSet;
-
-  //populate vertexSet, will want to use Edge objects later
-  for (int i = 0; i < numvertices; i++)
-    {
-      vertexSet.push_back(i);
-    }
-
-  cout << "the " << numvertices << "! possible permutations" << endl;
-  std::set<std::vector<int> > testSet;
-  testSet = Tools::noDupCartesianProduct(vertexSet, vertexSet);
-
-
-  //print sets
-  for (set<vector<int> >::iterator i = testSet.begin(); i != testSet.end(); i++)
-    {
-      vector<int> element = *i;
-      cout << element[0] << " : " << element[1] << endl;
-    }
-    return returnEdgeSet;
 }
 
 // ------------------------------------------------------------------------

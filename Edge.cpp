@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 #include "Edge.h"
-#include <sstream>
+#include "libs.h"
 
 using namespace std;
 

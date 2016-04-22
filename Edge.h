@@ -12,7 +12,7 @@
 #ifndef EDGE_H
 #define EDGE_H
 
-#include <string>
+#include "libs.h"
 
 class Edge
 {

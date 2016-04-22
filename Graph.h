@@ -11,11 +11,9 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include <fstream>
-#include <string>
-#include <vector>
 #include "Vertex.h"
 #include "Edge.h"
+#include "libs.h"
 
 class Graph
 {

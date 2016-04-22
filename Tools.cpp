@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 #include "Tools.h"
-#include <sstream>
+#include "libs.h"
 
 using namespace std;
 
@@ -251,40 +251,3 @@ unsigned long long Tools::factorial(int n) {
   return result;
 }
 
-// ------------------------------------------------------------------------
-// cartesianProduct: 
-// 
-// ------------------------------------------------------------------------
-std::set<std::vector<int> > Tools::noDupCartesianProduct
-(vector<int> J , vector<int> M)
-{
-  std::set<std::vector<int> > returnSet;
-  vector<vector<int> > edges;
-  vector<int> tempVec;
-
-  for (int j = 0; j < J.size(); j++)
-    {
-      for (int m = 0; m < M.size(); m++)
-        {
-          //pack temporary vector
-          tempVec.push_back(J[j]);
-          tempVec.push_back(M[m]);
-
-          //check for duplicate elements, add to edge vector
-          if (J[j] != M[m])
-            {
-              sort(tempVec.begin(), tempVec.end());
-              edges.push_back(tempVec);
-            }
-          tempVec.clear();
-        }
-    }
-
-  //add each edge vector to set
-  for (int i = 0; i < edges.size(); i++)
-    {
-      returnSet.insert(edges[i]);
-    }
-
-  return returnSet;
-}

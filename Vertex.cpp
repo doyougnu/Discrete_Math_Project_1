@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 #include "Vertex.h"
-#include <iostream>
+#include "libs.h"
 
 // ------------------------------------------------------------------------
 // Vertex: Default constructor, creates a vertex with 0 degree and -1 id
