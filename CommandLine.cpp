@@ -119,13 +119,13 @@ int main ()
       }
       else if (option == "gsg")
         {
-          int numvertices = 0;
+          int numReturnElements= 0;
           cout << "Generate a simple graph of n vertices" << endl;
-          cout << "How many vertices: ";
-          cin >> numvertices;
+          cout << "How many return elements: ";
+          cin >> numReturnElements;
 
           cout << "testing genEdges" << endl;
-          graph.genAllEdges(numvertices);
+          graph.enumerateVertexSet(numReturnElements);
           cout << endl;
         }
       else

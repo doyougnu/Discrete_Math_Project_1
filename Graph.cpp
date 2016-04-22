@@ -426,35 +426,39 @@ vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
 }
 
 // ------------------------------------------------------------------------
-// genAllEdges: given int n vertices, calculates all possible edges for a
-// graph of n vertices.
-// returns a vector of edges
+// getVertexSetAsVector: given nothing function iterates over vertexSet
+// and packs a vector with each vertex ID
+// returns packed vector
 // ------------------------------------------------------------------------
-std::vector<std::vector<int> > Graph::genAllEdges(int numvertices)
+vector<int> Graph::getVertexSetAsVector() const
 {
-  int maxedges = maxPossibleEdges(numvertices);
-  int loopcntr = 0;
-  std::vector<int> vertexSet;
-  std::vector<std::vector<int> > returnEdgeSet;
-
-  //populate vertexSet, will want to use Edge objects later
-  for (int i = 0; i < numvertices; i++)
+  vector<int> returnvector;
+  for (int i = 0; i < graphSet.vertexSet.size(); i++)
     {
-      vertexSet.push_back(i);
+      returnvector.push_back(graphSet.vertexSet[i].getId());
     }
+  return returnvector;
+}
 
-  cout << "the " << numvertices << "! possible permutations" << endl;
-  std::set<std::vector<int> > testSet;
-  testSet = Tools::noDupCartesianProduct(vertexSet, vertexSet);
+// ------------------------------------------------------------------------
+// enumerateVertexSet:
+// 
+//
+// ------------------------------------------------------------------------
 
-
-  //print sets
-  for (set<vector<int> >::iterator i = testSet.begin(); i != testSet.end(); i++)
+vector<int> Graph::enumerateVertexSet(int numReturnElements)
+{
+  cout <<  "lets enumerate yo!" << endl;
+  vector<int> vertexSet = getVertexSetAsVector();
+  do
     {
-      vector<int> element = *i;
-      cout << element[0] << " : " << element[1] << endl;
-    }
-    return returnEdgeSet;
+      for (int i = 0; i < vertexSet.size(); i++)
+        {
+          cout << vertexSet[i] << " ";
+        }
+
+      cout << endl;
+    } while (std::next_permutation(vertexSet.begin(), vertexSet.end()));
 }
 
 // ------------------------------------------------------------------------

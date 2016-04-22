@@ -49,8 +49,8 @@ class Graph
     bool isTree(GraphSet) const;
     bool vertexSetEqual(GraphSet, GraphSet) const;
     Vertex getVertexById(int, GraphSet) const;
-    std::vector<std::vector<int> > genAllEdges(int);
     int maxPossibleEdges(int);
+    std::vector<int> enumerateVertexSet(int);
 
     // Accessors
     int getEdgeNum() const;
@@ -58,6 +58,7 @@ class Graph
     int getResidue() const;
     int getAnnihiltion() const;
     std::vector<int> getSequence() const;
+    std::vector<int> getVertexSetAsVector() const;
     std::string getDegreeSequenceAsString() const;
     std::string getEdgeSetAsString(std::vector<Edge>) const;
     std::string getVertexSetAsString(std::vector<Vertex>) const;
