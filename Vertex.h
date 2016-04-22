@@ -12,7 +12,7 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-#include <vector>
+#include "libs.h"
 
 class Vertex
 {

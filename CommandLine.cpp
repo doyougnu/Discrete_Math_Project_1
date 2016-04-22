@@ -11,11 +11,7 @@
  *
 *******************************************************************************/
 
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
+#include "libs.h"
 #include "Graph.h"
 #include "Tools.h"
 
@@ -29,6 +25,7 @@ int main ()
   ifstream in_file;
   string file_name;
   int option;
+  string graph_folder = "graph_files/";
 
   cout << "------------------------------------------------------------" << endl
        << "                Discrete Mathematics Project" << endl
@@ -38,13 +35,14 @@ int main ()
        << "Enter graph filename: ";
 
   // stupid error checking section
-  if (!(cin >> file_name)) // Error hecker
+  if (!(cin >> file_name)) // Error checker
   {
     cout << "Error 101: Invalid input" << endl;
     return 101; // invalid input
   }
 
   // Try to open the file
+  file_name = graph_folder.append(file_name);
   in_file.open(file_name.c_str());
   if (!in_file) // Check to make sure the file exists/opened
   {
@@ -129,14 +127,7 @@ int main ()
         }
         case 5:
         {
-          int numvertices = 0;
-          cout << "Generate a simple graph of n vertices" << endl;
-          cout << "How many vertices: ";
-          cin >> numvertices;
-
-          cout << "testing genEdges" << endl;
-          graph.genAllEdges(numvertices);
-          cout << endl;
+          cout << "removed, keeping this as placeholder" << endl;
           break;
         }
         case 101:
