@@ -27,8 +27,8 @@ int main ()
 {
   bool running = true;
   ifstream in_file;
-  string file_name,
-         option = "";
+  string file_name;
+  int option;
 
   cout << "------------------------------------------------------------" << endl
        << "                Discrete Mathematics Project" << endl
@@ -71,53 +71,55 @@ int main ()
 
     if (cin >> option)
     {
-      if (option == "exit") // close program
+      switch (option)
       {
-        running = false;
-      }
-      else if (option == "algs") // print available algorithms
-      {
-        printAlgorithms(graph);
-      }
-      else if (option == "info") // print trivial graph information
-      {
-        cout << graph.getGraphInformation();
-      }
-      else if (option == "rg") // compute k-residue and elimination sequence
-      {
-        cout << endl << "Havel-Hakimi Algorithm" << endl;
-        vector<int> elim_seq = graph.findKResElimSeq(true);
-        if (elim_seq[graph.getVertexNum()] != -1)
+        case 1:
         {
-          cout << endl
-               << "R(G) = " << elim_seq[graph.getVertexNum()] << endl
-               << "E(D) = "
-               << Tools::getVectorAsString(elim_seq, graph.getVertexNum())
-               << endl;
+          cout << endl << "Havel-Hakimi Algorithm" << endl;
+          vector<int> elim_seq = graph.findKResElimSeq(true);
+          if (elim_seq[graph.getVertexNum()] != -1)
+          {
+            cout << endl
+                 << "R(G) = " << elim_seq[graph.getVertexNum()] << endl
+                 << "E(D) = "
+                 << Tools::getVectorAsString(elim_seq, graph.getVertexNum())
+                 << endl;
+          }
+          else
+          {
+            cout << "Sequence is not graphic." << endl;
+          }
+          break;
         }
-        else
+        case 2:
         {
-          cout << "Sequence is not graphic." << endl;
+          cout << "a(G) = " << graph.findAnnihilationNumber() << endl;
+          break;
         }
-      }
-      else if (option == "ag")
-        cout << "a(G) = " << graph.findAnnihilationNumber() << endl;
-      else if (option == "mst")
-      {
-        cout << endl << "Prim's Algorithm" << endl;
-        Graph::GraphSet result = graph.findMinimumSpanningTree(0, true);
-        if (graph.isSpanningTree(result))
-          cout << "Success! Found minimum spanning tree."  << endl << endl;
-        else
-          cout << "Failed! Could not find minimum spanning tree." << endl
-               << endl;
+        case 3:
+        {
+          cout << endl << "Prim's Algorithm" << endl;
+          Graph::GraphSet result = graph.findMinimumSpanningTree(0, true);
+          if (graph.isSpanningTree(result))
+            cout << "Success! Found minimum spanning tree."  << endl << endl;
+          else
+            cout << "Failed! Could not find minimum spanning tree." << endl
+                 << endl;
 
-        cout << "V(H) = { "
-             << graph.getVertexSetAsString(result.vertexSet) << "}" << endl
-             << "E(H) = { "
-             << graph.getEdgeSetAsString(result.edgeSet) << " }" << endl;
-      }
-      else if (option == "gsg")
+          cout << "V(H) = { "
+               << graph.getVertexSetAsString(result.vertexSet) << "}" << endl
+               << "E(H) = { "
+               << graph.getEdgeSetAsString(result.edgeSet) << " }" << endl;
+          break;
+        }
+        case 4:
+        {
+          vector<int> zgs = graph.findZeroForcingSet();
+          cout << "Z(G) = " << zgs.size() << endl;
+          cout << "Set: " << Tools::getVectorAsString(zgs, zgs.size()) << endl;
+          break;
+        }
+        case 5:
         {
           int numvertices = 0;
           cout << "Generate a simple graph of n vertices" << endl;
@@ -127,34 +129,50 @@ int main ()
           cout << "testing genEdges" << endl;
           graph.genAllEdges(numvertices);
           cout << endl;
+          break;
         }
-      else if (option == "fs")
-      {
-        vector<int> fs;
-        int id = 0;
-        cout << "Enter up to " << graph.getVertexNum()
-             << " vertices from 0 to " << graph.getVertexNum() - 1
-             << " (enter -1 to start): " << endl;
-        cin >> id;
-        while (id != -1)
+        case 101:
         {
-          fs.push_back(id);
+          vector<int> fs;
+          int id = 0;
+          cout << "Enter up to " << graph.getVertexNum()
+               << " vertices from 0 to " << graph.getVertexNum() - 1
+               << " (enter -1 to start): " << endl;
           cin >> id;
+          while (id != -1)
+          {
+            fs.push_back(id);
+            cin >> id;
+          }
+          if (graph.isForcingSet(fs))
+            cout << "Yes!" << endl;
+          else
+            cout << "No!" << endl;
+          break;
         }
-        if (graph.isForcingSet(fs))
-          cout << "Yes!" << endl;
-        else
-          cout << "No!" << endl;
+        case 10:
+        {
+          printAlgorithms(graph);
+          break;
+        }
+        case 11:
+        {
+          cout << graph.getGraphInformation();
+          break;
+        }
+        case 12:
+        {
+          running = false;
+          break;
+        }
+        default:
+          cout << "\"" << option << "\" is not currently programmed." << endl;
+          break;
       }
-      else if (option == "zg")
-      {
-        vector<int> zgs = graph.findZeroForcingSet();
-        cout << "Z(G) = " << zgs.size() << endl;
-        cout << "Set: " << Tools::getVectorAsString(zgs, zgs.size()) << endl;
-      }
-      else
-        cout << "\"" << option << "\" is not currently programmed." << endl;
     }
+    else
+      return -1;
+
   }
 
   return 0;
@@ -171,13 +189,13 @@ void printAlgorithms(Graph graph)
        << "----------------------------------------" << endl
        << "        Algorithms and Functions        " << endl
        << "----------------------------------------" << endl
-       << "rg - Find and print residue of the graph and elimination "
+       << "1. Find and print residue of the graph and elimination "
        << "sequence" << endl
-       << "ag - Find and print the annihilation number" << endl
-       << "mst - Find and print the minimum spanning tree" << endl
-       << "zg - Find zero forcing number and a set" << endl
-       << "gsg - Generate simple graphs of n vertices" << endl
-       << "algs - Show available Algorithms" << endl
-       << "info - Show trivial Graph information" << endl
-       << "exit - Close program" << endl;
+       << "2. Find and print the annihilation number" << endl
+       << "3. Find and print the minimum spanning tree" << endl
+       << "4. Find zero forcing number and a set" << endl
+       << "5. Generate simple graphs of n vertices" << endl
+       << "10. Show available Algorithms" << endl
+       << "11. Show trivial Graph information" << endl
+       << "12. Close program" << endl;
 }
