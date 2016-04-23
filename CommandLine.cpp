@@ -20,7 +20,7 @@ using namespace std;
 void printAlgorithms(Graph);
 void printSets(vector<vector<int> >);
 
-int main ()
+int main (int argc, char *argv[], char *envp[])
 {
   bool running = true;
   ifstream in_file;
@@ -33,17 +33,29 @@ int main ()
        << "                             by" << endl
        << "            Tanner G, Jeff Y, Micah J, Mitchell O" << endl
        << "------------------------------------------------------------" << endl
-       << "Enter graph filename: ";
+       << "Enter graph filename (with extension): ";
 
   // stupid error checking section
-  if (!(cin >> file_name)) // Error checker
+  if (argc < 2)
   {
-    cout << "Error 101: Invalid input" << endl;
-    return 101; // invalid input
+    if (!(cin >> file_name)) // Error checker
+    {
+      cout << "Error 101: Invalid input" << endl;
+      return 101; // invalid input
+    }
+  }
+  else
+  {
+    file_name = argv[1];
+    cout << file_name << endl;
   }
 
-  // Try to open the file
+  // get type
+  string type = file_name.substr(file_name.size()-2, file_name.size()-1);
+
   file_name = graph_folder.append(file_name);
+
+  // Try to open the file
   in_file.open(file_name.c_str());
   if (!in_file) // Check to make sure the file exists/opened
   {
@@ -52,18 +64,9 @@ int main ()
     return 404; // haha
   }
 
-  // get type
-  string type;
-  cout << "Enter graph file type (es, am): ";
-  if (!(cin >> type))
-  {
-    cout << "Unrecognized type!" << endl;
-    return 5;
-  }
-
   // Ok now we load stuff
   cout << endl << "Loading graph...";
-  Graph graph(in_file, type);
+  Graph graph(in_file, type.substr(0, type.size()));
 
   // Error better checkings
   if (graph.getVertexNum() == 0 || graph.getEdgeNum() == 0)

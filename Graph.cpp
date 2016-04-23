@@ -107,7 +107,7 @@ Graph::Graph(ifstream& data, string type)
   }
   else
   {
-    cout << "Unrecognized graph file type!" << endl;
+    cout << "Unrecognized graph file type: " << type << endl;
   }
 }
 
