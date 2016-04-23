@@ -576,7 +576,7 @@ vector<vector<int> > Graph::enumerate(int k)
 // comb: single combination
 // save: all combinations saved
 // ------------------------------------------------------------------------
-void Graph::combinations(vector<int> set, int l, int s, vector<int> comb,
+void Graph::combinations(vector<int>& set, int l, int s, vector<int>& comb,
                          vector<vector<int> >& save)
 {
   if (l == 0)

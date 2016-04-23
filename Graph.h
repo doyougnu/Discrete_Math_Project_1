@@ -55,7 +55,7 @@ class Graph
     int anyVertexWithExactlyOneNonColoredNeighbor(std::vector<Vertex>,
                                                std::vector<Vertex>) const;
     std::vector<std::vector<int> > enumerate(int);
-    void combinations(std::vector<int>, int, int, std::vector<int>,
+    void combinations(std::vector<int>&, int, int, std::vector<int>&,
                       std::vector<std::vector<int> >&);
     bool isIndependentSet(std::vector<int>);
 
