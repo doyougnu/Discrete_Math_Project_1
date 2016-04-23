@@ -1,7 +1,7 @@
 # Discrete Math I Project
 ## Here's how you do stuff
 * Use make to compile
-* use ./run <filename> to run a file
+* Use ./run graph.xx to start
 
 ## File extensions
 * .am - adjacency matrix
