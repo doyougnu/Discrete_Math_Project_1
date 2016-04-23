@@ -233,7 +233,10 @@ void printSets(vector<vector<int> > sets)
     cout << sets.size() << " Sets" << endl;
   else
     cout << "Set" << endl;
-  for (int i = 0; i < sets.size(); i++)
+  int s = 10;
+  if (sets.size() <= 10)
+    s = sets.size();
+  for (int i = 0; i < s; i++)
   {
     for (int j = 0; j < sets[i].size(); j++)
     {
@@ -241,4 +244,6 @@ void printSets(vector<vector<int> > sets)
     }
     cout << endl;
   }
+  if (sets.size() > s)
+    cout << endl << sets.size() - s << " sets not shown" << endl;
 }
