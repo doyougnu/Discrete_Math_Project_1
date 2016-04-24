@@ -266,3 +266,49 @@ unsigned long long Tools::factorial(int n) {
   }
   return result;
 }
+
+// ------------------------------------------------------------------------
+// enumerate: enumerates all combinations of num_vertices choose k
+// k: elements per combination
+// returns a vector<vector<int>>
+// ------------------------------------------------------------------------
+vector<vector<int> > Tools::enumerate(int n, int k)
+{
+  vector<vector<int> > result;
+  vector<int> c, v_set;
+
+  for (int i = 0; i < k; i++)
+    c.push_back(0);
+
+  for (int i = 0; i < n; i++)
+    v_set.push_back(i);
+
+  combinations(v_set, k, 0, c, result);
+
+  result.shrink_to_fit();
+  return result;
+}
+
+// ------------------------------------------------------------------------
+// combinations: recursive function for combos
+// set: set to make combinations from
+// l: your k
+// s: starting point
+// comb: single combination
+// save: all combinations saved
+// ------------------------------------------------------------------------
+void Tools::combinations(vector<int>& set, int l, int s, vector<int>& comb,
+                         vector<vector<int> >& save)
+{
+  if (l == 0)
+  {
+    comb.shrink_to_fit();
+    save.push_back(comb);
+    return;
+  }
+  for (int i = s; i <= set.size() - l; i++)
+  {
+    comb[comb.size() - l] = set[i];
+    combinations(set, l-1, i+1, comb, save);
+  }
+}

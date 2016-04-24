@@ -547,73 +547,91 @@ int Graph::anyVertexWithExactlyOneNonColoredNeighbor(vector<Vertex> set,
 }
 
 // ------------------------------------------------------------------------
-// enumerate: enumerates all combinations of num_vertices choose k
-// k: elements per combination
-// returns a vector<vector<int>>
-// ------------------------------------------------------------------------
-vector<vector<int> > Graph::enumerate(int k)
-{
-  vector<vector<int> > result;
-  vector<int> c, v_set;
-
-  for (int i = 0; i < k; i++)
-    c.push_back(0);
-
-  for (int i = 0; i < getVertexNum(); i++)
-    v_set.push_back(i);
-
-  combinations(v_set, k, 0, c, result);
-
-  result.shrink_to_fit();
-  return result;
-}
-
-// ------------------------------------------------------------------------
-// combinations: recursive function for combos
-// set: set to make combinations from
+// recursiveForcingSet: recursive function for finding the forcing set
+// set: vertex set of graph
 // l: your k
 // s: starting point
-// comb: single combination
-// save: all combinations saved
+// comb: single set
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
 // ------------------------------------------------------------------------
-void Graph::combinations(vector<int>& set, int l, int s, vector<int>& comb,
-                         vector<vector<int> >& save)
+void Graph::recursiveForcingSet(vector<int>& set, int l, int s,
+  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
 {
+  if (save.size() >= limit && limit > 0)
+    return;
   if (l == 0)
   {
-    comb.shrink_to_fit();
-    save.push_back(comb);
+    if (isForcingSet(comb))
+    {
+      comb.shrink_to_fit();
+      save.push_back(comb);
+      found = true;
+    }
     return;
   }
   for (int i = s; i <= set.size() - l; i++)
   {
     comb[comb.size() - l] = set[i];
-    combinations(set, l-1, i+1, comb, save);
+    recursiveForcingSet(set, l-1, i+1, comb, save, limit, found);
+  }
+}
+
+// ------------------------------------------------------------------------
+// recursiveIndependentSet: recursive function for finding the
+//  maximum independent set
+// set: vertex set of graph
+// l: your k
+// s: starting point
+// comb: single set
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
+// ------------------------------------------------------------------------
+void Graph::recursiveIndependentSet(vector<int>& set, int l, int s,
+  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
+{
+  if (save.size() >= limit && limit > 0)
+    return;
+  if (l == 0)
+  {
+    if (isIndependentSet(comb))
+    {
+      comb.shrink_to_fit();
+      save.push_back(comb);
+      found = true;
+    }
+    return;
+  }
+  for (int i = s; i <= set.size() - l; i++)
+  {
+    comb[comb.size() - l] = set[i];
+    recursiveIndependentSet(set, l-1, i+1, comb, save, limit, found);
   }
 }
 
 // ------------------------------------------------------------------------
 // findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
+// limit: limits the amount of sets returned
 // returns a vector<vector<int> > i'm tired
 // ------------------------------------------------------------------------
-vector<vector<int> > Graph::findZeroForcingSets()
+vector<vector<int> > Graph::findZeroForcingSets(int limit)
 {
   int lower_bound = getMinDegree(); // From Teach's paper, thanks Teach
   vector<vector<int> > results;
-  vector<vector<int> > p;
+  vector<int> v_set;
   bool found = false;
+
+  for (int i = 0; i < getVertexNum(); i++)
+    v_set.push_back(i);
 
   for (int i = lower_bound; i < getVertexNum() && !found; i++)
   {
-    p = enumerate(i);
-    for (int j = 0; j < p.size(); j++)
-    {
-      if (isForcingSet(p[j]))
-      {
-        results.push_back(p[j]);
-        found = true;
-      }
-    }
+    vector<int> c;
+    for (int j = 0; j < i; j++)
+      c.push_back(0);
+    recursiveForcingSet(v_set, i, 0, c, results, limit, found);
   }
 
   return results;
@@ -622,26 +640,25 @@ vector<vector<int> > Graph::findZeroForcingSets()
 // ------------------------------------------------------------------------
 // findMaximumIndependentSets: finds maximum independent sets which is also
 // the independence number
+// limit: limits the amount of sets to return
 // returns a vector<vector<int> >
 // ------------------------------------------------------------------------
-vector<vector<int> > Graph::findMaximumIndependentSets()
+vector<vector<int> > Graph::findMaximumIndependentSets(int limit)
 {
   int upper_bound = getVertexNum() - ceil((getVertexNum()-1) / getMaxDegree());
   vector<vector<int> > results;
-  vector<vector<int> > p;
+  vector<int> v_set;
   bool found = false;
+
+  for (int i = 0; i < getVertexNum(); i++)
+    v_set.push_back(i);
 
   for (int i = upper_bound; i >= 1 && !found; i--)
   {
-    p = enumerate(i);
-    for (int j = 0; j < p.size(); j++)
-    {
-      if (isIndependentSet(p[j]))
-      {
-        results.push_back(p[j]);
-        found = true;
-      }
-    }
+    vector<int> c;
+    for (int j = 0; j < i; j++)
+      c.push_back(0);
+    recursiveIndependentSet(v_set, i, 0, c, results, limit, found);
   }
 
   return results;

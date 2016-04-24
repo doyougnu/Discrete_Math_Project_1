@@ -35,8 +35,8 @@ class Graph
     int findAnnihilationNumber();
     GraphSet findMinimumSpanningTree(int, bool);
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
-    std::vector<std::vector<int> > findZeroForcingSets();
-    std::vector<std::vector<int> > findMaximumIndependentSets();
+    std::vector<std::vector<int> > findZeroForcingSets(int);
+    std::vector<std::vector<int> > findMaximumIndependentSets(int);
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
@@ -54,10 +54,11 @@ class Graph
     bool isForcingSet(std::vector<int>);
     int anyVertexWithExactlyOneNonColoredNeighbor(std::vector<Vertex>,
                                                std::vector<Vertex>) const;
-    std::vector<std::vector<int> > enumerate(int);
-    void combinations(std::vector<int>&, int, int, std::vector<int>&,
-                      std::vector<std::vector<int> >&);
     bool isIndependentSet(std::vector<int>);
+    void recursiveForcingSet(std::vector<int>&, int, int, std::vector<int>&,
+      std::vector<std::vector<int> >&, int&, bool&);
+    void recursiveIndependentSet(std::vector<int>&, int, int, std::vector<int>&,
+      std::vector<std::vector<int> >&, int&, bool&);
 
     // Accessors
     int getEdgeNum() const;

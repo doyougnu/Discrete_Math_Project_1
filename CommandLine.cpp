@@ -130,14 +130,14 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 4:
         {
-          vector<vector<int> > zgs = graph.findZeroForcingSets();
+          vector<vector<int> > zgs = graph.findZeroForcingSets(0);
           cout << "Z(G) = " << zgs[0].size() << endl << endl;
           printSets(zgs);
           break;
         }
         case 5:
         {
-          vector<vector<int> > mis = graph.findMaximumIndependentSets();
+          vector<vector<int> > mis = graph.findMaximumIndependentSets(0);
           cout << "alpha(G) = " << mis[0].size() << endl << endl;
           printSets(mis);
           break;
@@ -220,11 +220,11 @@ void printAlgorithms(Graph graph)
        << "sequence" << endl
        << "2. Find and print the annihilation number" << endl
        << "3. Find and print the minimum spanning tree" << endl
-       << "4. Find all minimum forcing sets and zero forcing number" << endl
-       << "5. Find all maximum independent sets and independence number" << endl
-       << "6. Find all maximum cliques and clique number" << endl
+       << "4. Find minimum forcing sets and zero forcing number" << endl
+       << "5. Find maximum independent sets and independence number" << endl
+       << "6. Find maximum cliques and clique number" << endl
        << "7. Find the chromatic number" << endl
-       << "8. Find all minimum dominating sets and domination number" << endl
+       << "8. Find minimum dominating sets and domination number" << endl
        << "9. Find total domination stuff?" << endl
        << "10. Show available Algorithms" << endl
        << "11. Show trivial Graph information" << endl;

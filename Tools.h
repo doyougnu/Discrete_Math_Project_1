@@ -29,6 +29,9 @@ class Tools
    static int findAverage(std::vector<int>, const int);
    static std::string getVectorAsString(std::vector<int>, int);
    static unsigned long long factorial(int);
+   static std::vector<std::vector<int> > enumerate(int, int);
+   static void combinations(std::vector<int>&, int, int, std::vector<int>&,
+                            std::vector<std::vector<int> >&);
 };
 
 #endif // TOOLS_H
