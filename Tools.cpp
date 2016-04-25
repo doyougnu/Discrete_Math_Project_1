@@ -312,3 +312,59 @@ void Tools::combinations(vector<int>& set, int l, int s, vector<int>& comb,
     combinations(set, l-1, i+1, comb, save);
   }
 }
+
+// ------------------------------------------------------------------------
+// setDifference: finds the set difference of a and b (a - b)
+// a: set a
+// b: set b
+// make a template that will work for any datatype
+// returns a vector<int>
+// ------------------------------------------------------------------------
+vector<int> Tools::setDifference(vector<int> a, vector<int> b)
+{
+  vector<int> r;
+  for (int i = 0; i < a.size(); i++)
+  {
+    if (!isInSet(b, a[i]))
+      r.push_back(a[i]);
+  }
+  sortNonDecreasing(r, r.size());
+  return r;
+}
+
+// ------------------------------------------------------------------------
+// setUnion: finds the set union of a and b (a U b)
+// a: set a
+// b: set b
+// make a template that will work for any datatype
+// returns a vector<int>
+// ------------------------------------------------------------------------
+vector<int> Tools::setUnion(vector<int> a, vector<int> b)
+{
+  for (int i = 0; i < b.size(); i++)
+  {
+    if (!isInSet(a, b[i]))
+      a.push_back(b[i]);
+  }
+  sortNonDecreasing(a, a.size());
+  return a;
+}
+
+// ------------------------------------------------------------------------
+// setIntersection: finds the set intersection of a and b (a ∩ b)
+// a: set a
+// b: set b
+// make a template that will work for any datatype
+// returns a vector<int>
+// ------------------------------------------------------------------------
+vector<int> Tools::setIntersection(vector<int> a, vector<int> b)
+{
+  vector<int> r;
+  for (int i = 0; i < a.size(); i++)
+  {
+    if (isInSet(b, a[i]))
+      r.push_back(a[i]);
+  }
+  sortNonDecreasing(r, r.size());
+  return r;
+}

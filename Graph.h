@@ -35,8 +35,10 @@ class Graph
     int findAnnihilationNumber();
     GraphSet findMinimumSpanningTree(int, bool);
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
+    void sortVertexSetByDegreeNonDecreasing(std::vector<Vertex>&);
     std::vector<std::vector<int> > findZeroForcingSets(int);
     std::vector<std::vector<int> > findMaximumIndependentSets(int);
+    std::vector<std::vector<int> > findMaximalCliques();
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
@@ -59,6 +61,8 @@ class Graph
       std::vector<std::vector<int> >&, int&, bool&);
     void recursiveIndependentSet(std::vector<int>&, int, int, std::vector<int>&,
       std::vector<std::vector<int> >&, int&, bool&);
+    void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
+      std::vector<std::vector<int> >&, bool&);
 
     // Accessors
     int getEdgeNum() const;

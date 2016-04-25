@@ -18,7 +18,7 @@
 using namespace std;
 
 void printAlgorithms(Graph);
-void printSets(vector<vector<int> >);
+void printSets(vector<vector<int> >, bool, int);
 
 int main (int argc, char *argv[], char *envp[])
 {
@@ -132,19 +132,21 @@ int main (int argc, char *argv[], char *envp[])
         {
           vector<vector<int> > zgs = graph.findZeroForcingSets(0);
           cout << "Z(G) = " << zgs[0].size() << endl << endl;
-          printSets(zgs);
+          printSets(zgs, true, 10);
           break;
         }
         case 5:
         {
           vector<vector<int> > mis = graph.findMaximumIndependentSets(0);
           cout << "alpha(G) = " << mis[0].size() << endl << endl;
-          printSets(mis);
+          printSets(mis, true, 10);
           break;
         }
         case 6:
         {
-          cout << "Look! A clique number!" << endl;
+          vector<vector<int> > mc = graph.findMaximalCliques();
+          cout << "omega(G) = " << mc[mc.size()-1].size() << endl << endl;
+          printSets(mc, false, 10);
           break;
         }
         case 7:
@@ -230,22 +232,36 @@ void printAlgorithms(Graph graph)
        << "11. Show trivial Graph information" << endl;
 }
 
-void printSets(vector<vector<int> > sets)
+void printSets(vector<vector<int> > sets, bool forwards, int limit)
 {
   if (sets.size() > 1)
     cout << sets.size() << " Sets" << endl;
   else
     cout << "Set" << endl;
-  int s = 10;
-  if (sets.size() <= 10)
+  int s = limit;
+  if (sets.size() <= limit)
     s = sets.size();
-  for (int i = 0; i < s; i++)
+  if (forwards)
   {
-    for (int j = 0; j < sets[i].size(); j++)
+    for (int i = 0; i < s; i++)
     {
-      cout << sets[i][j] << " ";
+      for (int j = 0; j < sets[i].size(); j++)
+      {
+        cout << sets[i][j] << " ";
+      }
+      cout << endl;
     }
-    cout << endl;
+  }
+  else
+  {
+    for (int i = s-1; i >= 0; i--)
+    {
+      for (int j = 0; j < sets[i].size(); j++)
+      {
+        cout << sets[i][j] << " ";
+      }
+      cout << endl;
+    }
   }
   if (sets.size() > s)
     cout << endl << sets.size() - s << " sets not shown" << endl;

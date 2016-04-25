@@ -11,12 +11,13 @@
 * [Prim's Algorithm][2]
 * [Havel-Hakimi Algorithm][3]
 * [Annihilation Number Algorithm][4]
+* [Bron Kerbosch Algorithm][1]
 
 ## BRUTEFORCE STUFF
 * Zero Forcing Number and minimum forcing sets
 * Independence number and maximum independent sets
 
-
+[1]: https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
 [2]: https://en.wikipedia.org/wiki/Prim's_algorithm
 [3]: https://en.wikipedia.org/wiki/Havel%E2%80%93Hakimi_algorithm
 [4]: http://www.sciencedirect.com/science/article/pii/S0012365X13004792

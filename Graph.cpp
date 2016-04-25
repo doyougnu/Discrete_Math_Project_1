@@ -226,6 +226,34 @@ void Graph::sortEdgeSetByWeightNonDecreasing(vector<Edge> &edgeSet)
 }
 
 // ------------------------------------------------------------------------
+// sortVertexSetByDegreeNonDecreasing: Sorts a vertex set by degree
+// vertexSet: vertex set to be sorted
+// ------------------------------------------------------------------------
+void Graph::sortVertexSetByDegreeNonDecreasing(vector<Vertex> &vertexSet)
+{
+  Vertex temp;
+  int max;
+  for (int i = 0; i < vertexSet.size() - 1; i++)
+  {
+    // Start with the first element as the maximum
+    max = i;
+
+    // Loop through elements and check for an element less than max
+    for (int j = i + 1; j < vertexSet.size(); j++)
+      if (vertexSet[j].getDegree() < vertexSet[max].getDegree())
+        max = j;
+
+    // If the maximum element is NOT what we started with, we must swap
+    if (max != i)
+    {
+      temp = vertexSet[i];
+      vertexSet[i] = vertexSet[max];
+      vertexSet[max] = temp;
+    }
+  }
+}
+
+// ------------------------------------------------------------------------
 // isTreeAfterAdding: checks if graph will remain a tree after adding edge
 // edge: edge to add
 // graph: graph to add edge to
@@ -612,6 +640,42 @@ void Graph::recursiveIndependentSet(vector<int>& set, int l, int s,
 }
 
 // ------------------------------------------------------------------------
+// bronKerbosch: recursive function for finding maximal cliques
+// r: EMPTY SET
+// p: vertex set of graph
+// x: ANOTHER EMPTY ONLY AT FIRST THOUGH WELL IDK
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
+// ------------------------------------------------------------------------
+void Graph::bronKerbosch(vector<int> r, vector<int> p, vector<int> x,
+  vector<vector<int> >& save, bool& found)
+{
+  if (p.size() == 0 && x.size() == 0)
+  {
+    save.push_back(r);
+    found = true;
+    return;
+  }
+
+  Vertex u = getVertexById(Tools::setUnion(p, x)[0], graphSet);
+  vector<int> pdnu = Tools::setDifference(p, u.getNeighbors());
+  for (int i = 0; i < pdnu.size(); i++)
+  {
+    vector<int> v;
+    Vertex v_vertex = getVertexById(pdnu[i], graphSet);
+    v.push_back(pdnu[i]);
+    v.shrink_to_fit();
+    bronKerbosch(Tools::setUnion(r, v),
+                 Tools::setIntersection(p, v_vertex.getNeighbors()),
+                 Tools::setIntersection(x, v_vertex.getNeighbors()),
+                 save, found);
+    p = Tools::setDifference(p, v);
+    x = Tools::setUnion(x, v);
+  }
+}
+
+// ------------------------------------------------------------------------
 // findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
 // limit: limits the amount of sets returned
 // returns a vector<vector<int> > i'm tired
@@ -659,6 +723,38 @@ vector<vector<int> > Graph::findMaximumIndependentSets(int limit)
     for (int j = 0; j < i; j++)
       c.push_back(0);
     recursiveIndependentSet(v_set, i, 0, c, results, limit, found);
+  }
+
+  return results;
+}
+
+// ------------------------------------------------------------------------
+// findMaximalCliques: finds maximal cliques
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findMaximalCliques()
+{
+  vector<vector<int> > results;
+  vector<int> p, r, x;
+  vector<Vertex> v_set_sorted = graphSet.vertexSet;
+  bool found = false;
+
+  for (int i = 0; i < getVertexNum(); i++)
+    p.push_back(i); // god help up if we end up having to delete vertices
+
+  sortVertexSetByDegreeNonDecreasing(v_set_sorted);
+
+  for (int i = 0; i < v_set_sorted.size(); i++)
+  {
+    vector<int> v;
+    v.push_back(v_set_sorted[i].getId());
+    v.shrink_to_fit();
+    bronKerbosch(Tools::setUnion(r, v),
+                 Tools::setIntersection(p, v_set_sorted[i].getNeighbors()),
+                 Tools::setIntersection(x, v_set_sorted[i].getNeighbors()),
+                 results, found);
+    p = Tools::setDifference(p, v);
+    x = Tools::setUnion(x, v);
   }
 
   return results;
