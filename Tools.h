@@ -11,6 +11,7 @@
 #define TOOLS_H
 
 #include "libs.h"
+#include "Vertex.h"
 
 class Tools
 {
@@ -36,6 +37,7 @@ class Tools
    static std::vector<int> setUnion(std::vector<int>, std::vector<int>);
    static std::vector<int> setIntersection(std::vector<int>, std::vector<int>);
    static std::vector<int> setDifference(std::vector<int>, std::vector<int>);
+   static std::vector<Vertex> sortByDegree(std::vector<Vertex>);
 };
 
 #endif // TOOLS_H

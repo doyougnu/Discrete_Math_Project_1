@@ -20,6 +20,67 @@ using namespace std;
 void printAlgorithms(Graph);
 void printSets(vector<vector<int> >, bool, int);
 
+void printSets(vector<vector<int> > sets, bool forwards, int limit)
+{
+  if (sets.size() > 1)
+    cout << sets.size() << " Sets" << endl;
+  else
+    cout << "Set" << endl;
+  int s = limit;
+  if (sets.size() <= limit)
+    s = sets.size();
+  if (forwards)
+    {
+      for (int i = 0; i < s; i++)
+        {
+          for (int j = 0; j < sets[i].size(); j++)
+            {
+              cout << sets[i][j] << " ";
+            }
+          cout << endl;
+        }
+    }
+  else
+    {
+      for (int i = s-1; i >= 0; i--)
+        {
+          for (int j = 0; j < sets[i].size(); j++)
+            {
+              cout << sets[i][j] << " ";
+            }
+          cout << endl;
+        }
+    }
+  if (sets.size() > s)
+    cout << endl << sets.size() - s << " sets not shown" << endl;
+}
+
+// ------------------------------------------------------------------------
+// printAlgorithms: Prints a list of algorithms and functions
+// graph: used to check if either a sequence or matrix was loaded
+// ------------------------------------------------------------------------
+void printAlgorithms()
+{
+  // Header
+  cout << endl
+       << "----------------------------------------" << endl
+       << "        Algorithms and Functions        " << endl
+       << "----------------------------------------" << endl
+       << "0. Close program" << endl
+       << "1. Find and print residue of the graph and elimination "
+       << "sequence" << endl
+       << "2. Find and print the annihilation number" << endl
+       << "3. Find and print the minimum spanning tree" << endl
+       << "4. Find minimum forcing sets and zero forcing number" << endl
+       << "5. Find maximum independent sets and independence number" << endl
+       << "6. Find maximum cliques and clique number" << endl
+       << "7. Find the chromatic number" << endl
+       << "8. Find minimum dominating sets and domination number" << endl
+       << "9. Find total domination stuff?" << endl
+       << "10. Show available Algorithms" << endl
+       << "11. Show trivial Graph information" << endl;
+}
+
 int main (int argc, char *argv[], char *envp[])
 {
   bool running = true;
@@ -78,7 +139,9 @@ int main (int argc, char *argv[], char *envp[])
 
   while (running)
   {
+    printAlgorithms();
     cout << endl << "Enter a command: ";
+
 
     if (cin >> option)
     {
@@ -204,65 +267,4 @@ int main (int argc, char *argv[], char *envp[])
   }
 
   return 0;
-}
-
-// ------------------------------------------------------------------------
-// printAlgorithms: Prints a list of algorithms and functions
-// graph: used to check if either a sequence or matrix was loaded
-// ------------------------------------------------------------------------
-void printAlgorithms(Graph graph)
-{
-  // Header
-  cout << endl
-       << "----------------------------------------" << endl
-       << "        Algorithms and Functions        " << endl
-       << "----------------------------------------" << endl
-       << "0. Close program" << endl
-       << "1. Find and print residue of the graph and elimination "
-       << "sequence" << endl
-       << "2. Find and print the annihilation number" << endl
-       << "3. Find and print the minimum spanning tree" << endl
-       << "4. Find minimum forcing sets and zero forcing number" << endl
-       << "5. Find maximum independent sets and independence number" << endl
-       << "6. Find maximum cliques and clique number" << endl
-       << "7. Find the chromatic number" << endl
-       << "8. Find minimum dominating sets and domination number" << endl
-       << "9. Find total domination stuff?" << endl
-       << "10. Show available Algorithms" << endl
-       << "11. Show trivial Graph information" << endl;
-}
-
-void printSets(vector<vector<int> > sets, bool forwards, int limit)
-{
-  if (sets.size() > 1)
-    cout << sets.size() << " Sets" << endl;
-  else
-    cout << "Set" << endl;
-  int s = limit;
-  if (sets.size() <= limit)
-    s = sets.size();
-  if (forwards)
-  {
-    for (int i = 0; i < s; i++)
-    {
-      for (int j = 0; j < sets[i].size(); j++)
-      {
-        cout << sets[i][j] << " ";
-      }
-      cout << endl;
-    }
-  }
-  else
-  {
-    for (int i = s-1; i >= 0; i--)
-    {
-      for (int j = 0; j < sets[i].size(); j++)
-      {
-        cout << sets[i][j] << " ";
-      }
-      cout << endl;
-    }
-  }
-  if (sets.size() > s)
-    cout << endl << sets.size() - s << " sets not shown" << endl;
 }

@@ -12,6 +12,7 @@
 
 #include "Tools.h"
 #include "libs.h"
+#include "Vertex.h"
 
 using namespace std;
 
@@ -367,4 +368,35 @@ vector<int> Tools::setIntersection(vector<int> a, vector<int> b)
   }
   sortNonDecreasing(r, r.size());
   return r;
+}
+
+// ------------------------------------------------------------------------
+// sortByDegree: given a vector of vertices, functions sorts by decreasing
+// degree
+// returns a vector<Vertex>
+// ------------------------------------------------------------------------
+std::vector<Vertex> Tools::sortByDegree(vector<Vertex> unsorted)
+{
+  Vertex currentvalue, lastvalue;
+  bool swapped = false;
+
+  do
+    {
+      swapped = false;
+      for (int i = 1; i < unsorted.size(); i++)
+        {
+          lastvalue = unsorted[i - 1];
+          currentvalue = unsorted[i];
+
+          if (currentvalue.getDegree() < lastvalue.getDegree())
+            {
+              swapped = true;
+              unsorted[i - 1] = currentvalue;
+              unsorted[i] = lastvalue;
+            }
+        }
+    } while (swapped == true);
+
+
+  return unsorted;
 }

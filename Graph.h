@@ -63,6 +63,7 @@ class Graph
       std::vector<std::vector<int> >&, int&, bool&);
     void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
       std::vector<std::vector<int> >&, bool&);
+    void welshPowell(std::vector<Vertex>);
 
     // Accessors
     int getEdgeNum() const;
