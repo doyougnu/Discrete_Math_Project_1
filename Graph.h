@@ -63,7 +63,7 @@ class Graph
       std::vector<std::vector<int> >&, int&, bool&);
     void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
       std::vector<std::vector<int> >&, bool&);
-    void welshPowell(std::vector<Vertex>);
+    void welshPowell();
 
     // Accessors
     int getEdgeNum() const;
@@ -79,9 +79,12 @@ class Graph
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
+    int getChromaticNumber() const;
+    void setChromaticNumber(int n);
 
   private:
     std::vector<int> degreeSequence;
+    int chromaticNumber;
     GraphSet graphSet;
 };
 

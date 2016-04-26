@@ -778,6 +778,16 @@ bool Graph::isIndependentSet(vector<int> set)
 }
 
 // ------------------------------------------------------------------------
+// welshPowell: colors a graph via the welshPowell algorithm calcluting the
+// chromatic number of a graph in the process
+// returns void
+// ------------------------------------------------------------------------
+void Graph::welshPowell()
+{
+
+}
+
+// ------------------------------------------------------------------------
 // Accessors: Various accessors to member variables, this is ugly
 // ------------------------------------------------------------------------
 int Graph::getEdgeNum() const { return graphSet.edgeSet.size(); }
@@ -847,3 +857,7 @@ vector<Vertex> Graph::getVertexSetAsVector() const
 {
   return graphSet.vertexSet;
 }
+
+int Graph::getChromaticNumber() const { return chromaticNumber; }
+
+void Graph::setChromaticNumber(int n) { chromaticNumber = n; }
