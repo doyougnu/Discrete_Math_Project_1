@@ -30,9 +30,10 @@ class Vertex
     std::vector<int> getNeighbors() const;
     int getId() const;
     int getColor() const;
-    
+
     // Operators
     bool operator==(const Vertex &rhs);
+    operator int() const { return id; }
 
   private:
     int id,

@@ -784,7 +784,33 @@ bool Graph::isIndependentSet(vector<int> set)
 // ------------------------------------------------------------------------
 void Graph::welshPowell()
 {
+  int color = 1;
+  for (int i = 0; i < graphSet.vertexSet.size(); i++)
+    {
+      //if vertex is uncolored
+      if (graphSet.vertexSet[i].getColor() == 0)
+        {
+          //get neighbors
+          vector<int> neighbors = graphSet.vertexSet[i].getNeighbors();
+          graphSet.vertexSet[i].setColor(color);
 
+          //for every other vertex in vertex set
+          for (int a = 0; a < graphSet.vertexSet.size(); a++)
+            {
+              //if the other vertex is not a neighbor
+              if (!Tools::isInSet(neighbors, graphSet.vertexSet[a]))
+                {
+                  //color it differently
+                  graphSet.vertexSet[a].setColor(color);
+                }
+            }
+          //make a new color
+          color++;
+        }
+    }
+
+  //set chromatic color for graphSet
+  setChromaticNumber(color - 1); //-1 for to account for last iteration
 }
 
 // ------------------------------------------------------------------------
@@ -835,7 +861,8 @@ string Graph::getGraphInformation() const
      << "Degree Sequence: " << getDegreeSequenceAsString() << endl
      << "Maximum Degree: " << getMaxDegree() << endl
      << "Minimum Degree: " << getMinDegree() << endl
-     << "Average Degree: " << getAverageDegree()
+     << "Average Degree: " << getAverageDegree() << endl
+     << "Chromatic Number: " << getChromaticNumber()
      << endl;
 
   return ss.str();

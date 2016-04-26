@@ -80,7 +80,7 @@ class Graph
     int getMinDegree() const;
     int getAverageDegree() const;
     int getChromaticNumber() const;
-    void setChromaticNumber(int n);
+    void setChromaticNumber(int);
 
   private:
     std::vector<int> degreeSequence;

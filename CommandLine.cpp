@@ -214,12 +214,8 @@ int main (int argc, char *argv[], char *envp[])
         case 7:
         {
           cout << "Look! A chromatic number!" << endl;
-          vector<Vertex> sorted = Tools::sortByDegree(graph.getVertexSetAsVector());
-          for (auto& e : sorted)
-            {
-              cout << endl;
-              cout << " ID: " << e.getId() << " degree: " << e.getDegree();
-            }
+          graph.welshPowell();
+          cout << "its right here: " << graph.getChromaticNumber() << endl;
           break;
         }
         case 8:
