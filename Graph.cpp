@@ -842,3 +842,8 @@ int Graph::getAverageDegree() const
 {
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
+
+vector<Vertex> Graph::getVertexSetAsVector() const
+{
+  return graphSet.vertexSet;
+}

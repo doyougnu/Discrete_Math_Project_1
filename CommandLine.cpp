@@ -17,7 +17,7 @@
 
 using namespace std;
 
-void printAlgorithms(Graph);
+void printAlgorithms();
 void printSets(vector<vector<int> >, bool, int);
 
 void printSets(vector<vector<int> > sets, bool forwards, int limit)
@@ -135,7 +135,6 @@ int main (int argc, char *argv[], char *envp[])
 
   // Print important info
   cout << graph.getGraphInformation();
-  printAlgorithms(graph);
 
   while (running)
   {
@@ -215,6 +214,12 @@ int main (int argc, char *argv[], char *envp[])
         case 7:
         {
           cout << "Look! A chromatic number!" << endl;
+          vector<Vertex> sorted = Tools::sortByDegree(graph.getVertexSetAsVector());
+          for (auto& e : sorted)
+            {
+              cout << endl;
+              cout << " ID: " << e.getId() << " degree: " << e.getDegree();
+            }
           break;
         }
         case 8:
@@ -229,7 +234,7 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 10:
         {
-          printAlgorithms(graph);
+          printAlgorithms();
           break;
         }
         case 11:

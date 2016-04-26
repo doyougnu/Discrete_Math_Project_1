@@ -33,7 +33,6 @@ class Tools
    static std::vector<std::vector<int> > enumerate(int, int);
    static void combinations(std::vector<int>&, int, int, std::vector<int>&,
                             std::vector<std::vector<int> >&);
-
    static std::vector<int> setUnion(std::vector<int>, std::vector<int>);
    static std::vector<int> setIntersection(std::vector<int>, std::vector<int>);
    static std::vector<int> setDifference(std::vector<int>, std::vector<int>);

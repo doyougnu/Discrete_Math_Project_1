@@ -388,7 +388,7 @@ std::vector<Vertex> Tools::sortByDegree(vector<Vertex> unsorted)
           lastvalue = unsorted[i - 1];
           currentvalue = unsorted[i];
 
-          if (currentvalue.getDegree() < lastvalue.getDegree())
+          if (currentvalue.getDegree() > lastvalue.getDegree())
             {
               swapped = true;
               unsorted[i - 1] = currentvalue;

@@ -74,6 +74,7 @@ class Graph
     std::string getDegreeSequenceAsString() const;
     std::string getEdgeSetAsString(std::vector<Edge>) const;
     std::string getVertexSetAsString(std::vector<Vertex>) const;
+    std::vector<Vertex> getVertexSetAsVector() const;
     std::string getGraphInformation() const;
     int getMaxDegree() const;
     int getMinDegree() const;
