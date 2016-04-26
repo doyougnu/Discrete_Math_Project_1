@@ -80,6 +80,8 @@ class Graph
     int getMinDegree() const;
     int getAverageDegree() const;
     int getChromaticNumber() const;
+
+    // Mutators
     void setChromaticNumber(int);
 
   private:

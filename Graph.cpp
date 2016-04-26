@@ -109,6 +109,7 @@ Graph::Graph(ifstream& data, string type)
   {
     cout << "Unrecognized graph file type: " << type << endl;
   }
+  chromaticNumber = 0;
 }
 
 // ------------------------------------------------------------------------
@@ -861,9 +862,7 @@ string Graph::getGraphInformation() const
      << "Degree Sequence: " << getDegreeSequenceAsString() << endl
      << "Maximum Degree: " << getMaxDegree() << endl
      << "Minimum Degree: " << getMinDegree() << endl
-     << "Average Degree: " << getAverageDegree() << endl
-     << "Chromatic Number: " << getChromaticNumber()
-     << endl;
+     << "Average Degree: " << getAverageDegree() << endl;
 
   return ss.str();
 }

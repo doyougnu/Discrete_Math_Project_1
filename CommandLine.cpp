@@ -135,12 +135,11 @@ int main (int argc, char *argv[], char *envp[])
 
   // Print important info
   cout << graph.getGraphInformation();
+  printAlgorithms();
 
   while (running)
   {
-    printAlgorithms();
     cout << endl << "Enter a command: ";
-
 
     if (cin >> option)
     {
@@ -213,9 +212,9 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 7:
         {
-          cout << "Look! A chromatic number!" << endl;
-          graph.welshPowell();
-          cout << "its right here: " << graph.getChromaticNumber() << endl;
+          if (graph.getChromaticNumber() == 0)
+            graph.welshPowell();
+          cout << "chi(G) = " << graph.getChromaticNumber() << endl;
           break;
         }
         case 8:
