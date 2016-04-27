@@ -689,6 +689,22 @@ bool Graph::isVertexInGraph(Vertex vertex, GraphSet graph) const
 }
 
 // ------------------------------------------------------------------------
+// isVertexInSet: checks if vertex is in graph
+// vertex: vertex to look for in graph
+// vertexSet: vertex Set in question
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isVertexInSet(Vertex vertex, vector<Vertex> vertexSet) const
+{
+  for (int i = 0; i < vertexSet.size(); i++)
+  {
+    if (vertex == vertexSet[i])
+      return true;
+  }
+  return false;
+}
+
+// ------------------------------------------------------------------------
 // isTree: checks if the GraphSet represents a Tree
 // returns a bool
 // ------------------------------------------------------------------------
@@ -710,6 +726,34 @@ bool Graph::vertexSetEqual(GraphSet g1, GraphSet g2) const
   vector<Vertex> v1 = g1.vertexSet;
   vector<Vertex> v2 = g2.vertexSet;
 
+  if (v1.size() != v2.size())
+    return false;
+
+  bool foundMatch = false;
+  for (int i = 0; i < v1.size(); i++)
+  {
+    for (int j = 0; j < v2.size(); j++)
+    {
+      if (v1[i] == v2[j]) // Check if element in v1 is anywhere in v2
+        foundMatch = true; // if so, there's a match for the element
+    }
+    if (!foundMatch) // If we loop through and never find a match, they aren't
+     return false;   // equal
+  }
+
+  return true;
+}
+
+// ------------------------------------------------------------------------
+// vertexSetEqual: checks if both vertex sets have the same elements
+//                 regardless of order. This treats sets like Number Sets
+//                 in Discrete Math.
+// v1: one of them vertex sets ya gonna checks
+// v2: one of them other vertex sets ya gonna compare
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::vertexSetEqual(vector<Vertex> v1, vector<Vertex> v2) const
+{
   if (v1.size() != v2.size())
     return false;
 
@@ -831,6 +875,35 @@ bool Graph::isIndependentSet(vector<int> set)
     }
   }
   return true;
+}
+
+// ------------------------------------------------------------------------
+// isDominatingSet: checks if the set is a dominating set of this graph
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isDominatingSet(vector<int> set)
+{
+  vector<Vertex> s, ngs;
+  for (int i = 0; i < set.size(); i++)
+    s.push_back(graphSet.vertexSet[set[i]]);
+
+  ngs = s;
+  for (int i = 0; i < graphSet.vertexSet.size(); i++)
+  {
+    for (int j = 0; j < graphSet.vertexSet[i].getNeighbors().size(); j++)
+    {
+      Vertex v = getVertexById(graphSet.vertexSet[i].getNeighbors()[j],
+        graphSet);
+      if (v.getId() != -1)
+      {
+        if (!isVertexInSet(v, ngs) && isVertexInSet(v, s))
+          ngs.push_back(v);
+      }
+    }
+  }
+
+  return vertexSetEqual(ngs, graphSet.vertexSet);
+
 }
 
 // ------------------------------------------------------------------------

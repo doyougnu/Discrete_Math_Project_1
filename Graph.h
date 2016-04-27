@@ -60,8 +60,10 @@ class Graph
     bool isSpanningTree(GraphSet) const;
     bool isEdgeInGraph(Edge, GraphSet) const;
     bool isVertexInGraph(Vertex, GraphSet) const;
+    bool isVertexInSet(Vertex, std::vector<Vertex>) const;
     bool isTree(GraphSet) const;
     bool vertexSetEqual(GraphSet, GraphSet) const;
+    bool vertexSetEqual(std::vector<Vertex>, std::vector<Vertex>GraphSet) const;
     Vertex getVertexById(int, GraphSet) const;
     std::vector<std::vector<int> > genAllEdges(int);
     int maxPossibleEdges(int);
@@ -69,6 +71,7 @@ class Graph
     int getVertexWithOneNonColoredNeighbor(std::vector<Vertex>,
       std::vector<Vertex>) const;
     bool isIndependentSet(std::vector<int>);
+    bool isDominatingSet(std::vector<int>);
 
     // Accessors
     int getEdgeNum() const;
