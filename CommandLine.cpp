@@ -76,7 +76,6 @@ void printAlgorithms()
        << "6. Find maximum cliques and clique number" << endl
        << "7. Find the chromatic number" << endl
        << "8. Find minimum dominating sets and domination number" << endl
-       << "9. Find total domination stuff?" << endl
        << "10. Show available Algorithms" << endl
        << "11. Show trivial Graph information" << endl;
 }
@@ -212,19 +211,12 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 7:
         {
-          if (graph.getChromaticNumber() == 0)
-            graph.welshPowell();
-          cout << "chi(G) = " << graph.getChromaticNumber() << endl;
+          cout << "chi(G) = " << "?" << endl;
           break;
         }
         case 8:
         {
-          cout << "Look! A domination number!" << endl;
-          break;
-        }
-        case 9:
-        {
-          cout << "Look! A total domination number stuff!" << endl;
+          cout << "gamma(G) = " << "?" << endl;
           break;
         }
         case 10:
@@ -239,21 +231,7 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 101: // testing stuff
         {
-          vector<int> fs;
-          int id = 0;
-          cout << "Enter up to " << graph.getVertexNum()
-               << " vertices from 0 to " << graph.getVertexNum() - 1
-               << " (enter -1 to start): " << endl;
-          cin >> id;
-          while (id != -1)
-          {
-            fs.push_back(id);
-            cin >> id;
-          }
-          if (graph.isIndependentSet(fs))
-            cout << "Yes!" << endl;
-          else
-            cout << "No!" << endl;
+          cout << "WOW! You found the secret testing command." << endl;
           break;
         }
         default:

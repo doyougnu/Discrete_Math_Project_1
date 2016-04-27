@@ -109,7 +109,6 @@ Graph::Graph(ifstream& data, string type)
   {
     cout << "Unrecognized graph file type: " << type << endl;
   }
-  chromaticNumber = 0;
 }
 
 // ------------------------------------------------------------------------
@@ -122,6 +121,93 @@ void Graph::generateDegreeSequence()
     degreeSequence.push_back(graphSet.vertexSet[i].getDegree());
 
   Tools::sortNonIncreasing(degreeSequence, graphSet.vertexSet.size());
+}
+
+// ------------------------------------------------------------------------
+// findKResElimSeq: Calls the recursive findKResElimSeq to make it easier
+// print_steps: prints result of each step if true
+// returns a vector<int>
+// ------------------------------------------------------------------------
+vector<int> Graph::findKResElimSeq(bool print_steps)
+{
+  return findKResElimSeq(degreeSequence, graphSet.vertexSet.size(),
+                         print_steps);
+}
+
+// ------------------------------------------------------------------------
+// findKResElimSeq: Uses the Havel-Hakimi algorithm to find the k-residue,
+//                  the elimination sequence, and if the sequence is graphic.
+//                  Returns true if it is graphic, false otherwise. The
+//                  sequence passed in is rebuilt in this format:
+//                  {elimination sequence, k-residue} with k-residue being
+//                  the last element of the sequence.
+// seq: degree sequence to input
+// n: number of slots the algorithm looks at in seq
+// print_steps: prints result of each step if true
+// returns a vector<int>
+// ------------------------------------------------------------------------
+vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
+{
+  if (print_steps)
+    cout << Tools::getVectorAsString(seq, n) << endl;
+
+  // Grab first number
+  int first_num = seq[0];
+
+  // The first number needs to be less than or equal to n-1, where n is the
+  // number of vertices
+  if (first_num > n - 1) // negation
+  {
+    seq.push_back(-1);
+    return seq;
+  }
+
+  // Swap first and last number in the array
+  seq[0] = seq[n - 1];
+  seq[n - 1] = first_num;
+
+  // We swapped the largest value with the last element in the array
+  // So if we decrement the amount of vertices by 1 in the array, it will
+  // ignore the largest value, effectively "crossing it out"
+  n--;
+
+  // Sort all but the one we "crossed out" keeping them saved at the end
+  Tools::sortNonIncreasing(seq, n);
+
+  // Subtract 1 from the first first_num numbers ...yeah
+  for (int i = 0; i < first_num; i++)
+    seq[i]--;
+
+  // Sort before passing the array back through
+  Tools::sortNonIncreasing(seq, n);
+
+  // Check for base case
+  if (Tools::anyNegatives(seq, n)) // Vertices can't have negative degrees
+  {
+    if (print_steps) // print last "failure" step
+      cout << Tools::getVectorAsString(seq, n) << endl;
+    seq.push_back(-1);
+    return seq;
+  }
+  else if (Tools::onlyZeros(seq, n)) // If there's only zeros left
+  {
+    if (print_steps)
+      cout << Tools::getVectorAsString(seq, n) << endl;
+    Tools::sortNonIncreasing(seq, graphSet.vertexSet.size());
+    seq.push_back(Tools::countZeros(seq, graphSet.vertexSet.size()));
+    return seq; // We're done!
+  }
+  else if (n <= 1) // If there's not only zeros and we're on the last
+  {
+    if (print_steps) // print last "failure" step
+      cout << Tools::getVectorAsString(seq, n) << endl;
+    seq.push_back(-1);
+    return seq; // one, then we can't end up with zeros
+  }
+  else // If there's no negatives, nonzeros, and its not on the last number
+  {
+    return findKResElimSeq(seq, n, print_steps); // Keep going!
+  }
 }
 
 // ------------------------------------------------------------------------
@@ -196,6 +282,214 @@ Graph::GraphSet Graph::findMinimumSpanningTree(int start, bool print_steps)
   }
 
   return h;
+}
+
+// ------------------------------------------------------------------------
+// findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
+// limit: limits the amount of sets returned
+// returns a vector<vector<int> > i'm tired
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findZeroForcingSets(int limit)
+{
+  int lower_bound = getMinDegree(); // From Teach's paper, thanks Teach
+  vector<vector<int> > results;
+  vector<int> v_set;
+  bool found = false;
+
+  for (int i = 0; i < getVertexNum(); i++)
+    v_set.push_back(i);
+
+  for (int i = lower_bound; i < getVertexNum() && !found; i++)
+  {
+    vector<int> c;
+    for (int j = 0; j < i; j++)
+      c.push_back(0);
+    recursiveForcingSet(v_set, i, 0, c, results, limit, found);
+  }
+
+  return results;
+}
+
+// ------------------------------------------------------------------------
+// recursiveForcingSet: recursive function for finding the forcing set
+// set: vertex set of graph
+// l: your k
+// s: starting point
+// comb: single set
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
+// ------------------------------------------------------------------------
+void Graph::recursiveForcingSet(vector<int>& set, int l, int s,
+  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
+{
+  if (save.size() >= limit && limit > 0)
+    return;
+  if (l == 0)
+  {
+    if (isForcingSet(comb))
+    {
+      comb.shrink_to_fit();
+      save.push_back(comb);
+      found = true;
+    }
+    return;
+  }
+  for (int i = s; i <= set.size() - l; i++)
+  {
+    comb[comb.size() - l] = set[i];
+    recursiveForcingSet(set, l-1, i+1, comb, save, limit, found);
+  }
+}
+
+// ------------------------------------------------------------------------
+// findMaximumIndependentSets: finds maximum independent sets which is also
+// the independence number
+// limit: limits the amount of sets to return
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findMaximumIndependentSets(int limit)
+{
+  return findMaximumIndependentSets(graphSet, limit);
+}
+
+// ------------------------------------------------------------------------
+// findMaximumIndependentSets: finds maximum independent sets which is also
+// the independence number
+// graph: graph to check for independent sets
+// limit: limits the amount of sets to return
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
+  int limit)
+{
+  // find max degree
+  int max_degree = graph.vertexSet[0].getDegree();
+  for (int i = 1; i < graph.vertexSet.size(); i++)
+    if (graph.vertexSet[i].getDegree() > max_degree)
+      max_degree = graph.vertexSet[i].getDegree();
+
+  // get upper bound
+  int upper_bound = graph.vertexSet.size()
+    - ceil((graph.vertexSet.size()-1) / max_degree);
+
+  vector<vector<int> > results;
+  vector<int> v_set;
+  bool found = false;
+
+  for (int i = 0; i < graph.vertexSet.size(); i++)
+    v_set.push_back(graph.vertexSet[i].getId());
+
+  for (int i = upper_bound; i >= 1 && !found; i--)
+  {
+    vector<int> c;
+    for (int j = 0; j < i; j++)
+      c.push_back(0);
+    recursiveIndependentSet(v_set, i, 0, c, results, limit, found);
+  }
+
+  return results;
+}
+
+// ------------------------------------------------------------------------
+// recursiveIndependentSet: recursive function for finding the
+//  maximum independent set
+// set: vertex set of graph
+// l: your k
+// s: starting point
+// comb: single set
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
+// ------------------------------------------------------------------------
+void Graph::recursiveIndependentSet(vector<int>& set, int l, int s,
+  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
+{
+  if (save.size() >= limit && limit > 0)
+    return;
+  if (l == 0)
+  {
+    if (isIndependentSet(comb))
+    {
+      comb.shrink_to_fit();
+      save.push_back(comb);
+      found = true;
+    }
+    return;
+  }
+  for (int i = s; i <= set.size() - l; i++)
+  {
+    comb[comb.size() - l] = set[i];
+    recursiveIndependentSet(set, l-1, i+1, comb, save, limit, found);
+  }
+}
+
+// ------------------------------------------------------------------------
+// findMaximalCliques: finds maximal cliques
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findMaximalCliques()
+{
+  vector<vector<int> > results;
+  vector<int> p, r, x;
+  vector<Vertex> v_set_sorted = graphSet.vertexSet;
+  bool found = false;
+
+  for (int i = 0; i < getVertexNum(); i++)
+    p.push_back(i); // god help up if we end up having to delete vertices
+
+  sortVertexSetByDegreeNonDecreasing(v_set_sorted);
+
+  for (int i = 0; i < v_set_sorted.size(); i++)
+  {
+    vector<int> v;
+    v.push_back(v_set_sorted[i].getId());
+    v.shrink_to_fit();
+    bronKerbosch(Tools::setUnion(r, v),
+                 Tools::setIntersection(p, v_set_sorted[i].getNeighbors()),
+                 Tools::setIntersection(x, v_set_sorted[i].getNeighbors()),
+                 results, found);
+    p = Tools::setDifference(p, v);
+    x = Tools::setUnion(x, v);
+  }
+
+  return results;
+}
+
+// ------------------------------------------------------------------------
+// bronKerbosch: recursive function for finding maximal cliques
+// r: EMPTY SET
+// p: vertex set of graph
+// x: ANOTHER EMPTY ONLY AT FIRST THOUGH WELL IDK
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
+// ------------------------------------------------------------------------
+void Graph::bronKerbosch(vector<int> r, vector<int> p, vector<int> x,
+  vector<vector<int> >& save, bool& found)
+{
+  if (p.size() == 0 && x.size() == 0)
+  {
+    save.push_back(r);
+    found = true;
+    return;
+  }
+
+  Vertex u = getVertexById(Tools::setUnion(p, x)[0], graphSet);
+  vector<int> pdnu = Tools::setDifference(p, u.getNeighbors());
+  for (int i = 0; i < pdnu.size(); i++)
+  {
+    vector<int> v;
+    Vertex v_vertex = getVertexById(pdnu[i], graphSet);
+    v.push_back(pdnu[i]);
+    v.shrink_to_fit();
+    bronKerbosch(Tools::setUnion(r, v),
+                 Tools::setIntersection(p, v_vertex.getNeighbors()),
+                 Tools::setIntersection(x, v_vertex.getNeighbors()),
+                 save, found);
+    p = Tools::setDifference(p, v);
+    x = Tools::setUnion(x, v);
+  }
 }
 
 // ------------------------------------------------------------------------
@@ -298,6 +592,40 @@ void Graph::addVertexToGraphSet(Vertex vertex, GraphSet &graph)
 {
   if (!isVertexInGraph(vertex, graph))
     graph.vertexSet.push_back(vertex);
+}
+
+// ------------------------------------------------------------------------
+// removeVertexFromGraphSet: removes a vertex from the graph set, as well
+//  as it's edges in the edge set
+// v: vertex to remove
+// graph: graph to remove vertex from
+// ------------------------------------------------------------------------
+void Graph::removeVertexFromGraphSet(int v, GraphSet &graph)
+{
+  for (int i = 0; i < graph.vertexSet.size(); i++)
+  {
+    if (graph.vertexSet[i].getId() == v)
+    {
+      graph.vertexSet.erase(graph.vertexSet.begin() + i);
+      for (int j = 0; j < graph.edgeSet.size(); j++)
+      {
+        if (graph.edgeSet[j].getTo() == v || graph.edgeSet[j].getFrom() == v)
+          graph.edgeSet.erase(graph.edgeSet.begin() + j--); // lol
+      }
+      break;
+    }
+  }
+  // now delete them from neighbors
+  for (int i = 0; i < graph.vertexSet.size(); i++)
+  {
+    for (int j = 0; j < graph.vertexSet[i].getNeighbors().size(); j++)
+    {
+      if (graph.vertexSet[i].getNeighbors()[j] == v)
+        graph.vertexSet[i].getNeighbors().erase(graph.vertexSet[i].
+          getNeighbors().begin() + j--);
+    }
+  }
+  // this method is shitty but whatever
 }
 
 // ------------------------------------------------------------------------
@@ -420,93 +748,6 @@ Vertex Graph::getVertexById(int vertex, GraphSet graph) const
 }
 
 // ------------------------------------------------------------------------
-// findKResElimSeq: Calls the recursive findKResElimSeq to make it easier
-// print_steps: prints result of each step if true
-// returns a vector<int>
-// ------------------------------------------------------------------------
-vector<int> Graph::findKResElimSeq(bool print_steps)
-{
-  return findKResElimSeq(degreeSequence, graphSet.vertexSet.size(),
-                         print_steps);
-}
-
-// ------------------------------------------------------------------------
-// findKResElimSeq: Uses the Havel-Hakimi algorithm to find the k-residue,
-//                  the elimination sequence, and if the sequence is graphic.
-//                  Returns true if it is graphic, false otherwise. The
-//                  sequence passed in is rebuilt in this format:
-//                  {elimination sequence, k-residue} with k-residue being
-//                  the last element of the sequence.
-// seq: degree sequence to input
-// n: number of slots the algorithm looks at in seq
-// print_steps: prints result of each step if true
-// returns a vector<int>
-// ------------------------------------------------------------------------
-vector<int> Graph::findKResElimSeq(vector<int> seq, int n, bool print_steps)
-{
-  if (print_steps)
-    cout << Tools::getVectorAsString(seq, n) << endl;
-
-  // Grab first number
-  int first_num = seq[0];
-
-  // The first number needs to be less than or equal to n-1, where n is the
-  // number of vertices
-  if (first_num > n - 1) // negation
-  {
-    seq.push_back(-1);
-    return seq;
-  }
-
-  // Swap first and last number in the array
-  seq[0] = seq[n - 1];
-  seq[n - 1] = first_num;
-
-  // We swapped the largest value with the last element in the array
-  // So if we decrement the amount of vertices by 1 in the array, it will
-  // ignore the largest value, effectively "crossing it out"
-  n--;
-
-  // Sort all but the one we "crossed out" keeping them saved at the end
-  Tools::sortNonIncreasing(seq, n);
-
-  // Subtract 1 from the first first_num numbers ...yeah
-  for (int i = 0; i < first_num; i++)
-    seq[i]--;
-
-  // Sort before passing the array back through
-  Tools::sortNonIncreasing(seq, n);
-
-  // Check for base case
-  if (Tools::anyNegatives(seq, n)) // Vertices can't have negative degrees
-  {
-    if (print_steps) // print last "failure" step
-      cout << Tools::getVectorAsString(seq, n) << endl;
-    seq.push_back(-1);
-    return seq;
-  }
-  else if (Tools::onlyZeros(seq, n)) // If there's only zeros left
-  {
-    if (print_steps)
-      cout << Tools::getVectorAsString(seq, n) << endl;
-    Tools::sortNonIncreasing(seq, graphSet.vertexSet.size());
-    seq.push_back(Tools::countZeros(seq, graphSet.vertexSet.size()));
-    return seq; // We're done!
-  }
-  else if (n <= 1) // If there's not only zeros and we're on the last
-  {
-    if (print_steps) // print last "failure" step
-      cout << Tools::getVectorAsString(seq, n) << endl;
-    seq.push_back(-1);
-    return seq; // one, then we can't end up with zeros
-  }
-  else // If there's no negatives, nonzeros, and its not on the last number
-  {
-    return findKResElimSeq(seq, n, print_steps); // Keep going!
-  }
-}
-
-// ------------------------------------------------------------------------
 // maxPossibleEdges: given int n vertices, calculates the maximum number of
 // edge for a given graph
 // returns an int
@@ -536,26 +777,26 @@ bool Graph::isForcingSet(vector<int> set)
     v_set[c_set.back().getId()].setColor(1);
   }
 
-  int id = anyVertexWithExactlyOneNonColoredNeighbor(c_set, v_set);
+  int id = getVertexWithOneNonColoredNeighbor(c_set, v_set);
   while (id != -1)
   {
     c_set.push_back(graphSet.vertexSet[id]);
     v_set[c_set.back().getId()].setColor(1);
 
-    id = anyVertexWithExactlyOneNonColoredNeighbor(c_set, v_set);
+    id = getVertexWithOneNonColoredNeighbor(c_set, v_set);
   }
   return c_set.size() == v_set.size();
 }
 
 // ------------------------------------------------------------------------
-// anyVertexWithExactlyOneColoredNeighbor: returns the index if found,
+// getVertexWithOneNonColoredNeighbor: returns the index if found,
 //  -1 if not
 // set: vertex set to check
 // v_set: vertex set
 // returns an int
 // ------------------------------------------------------------------------
-int Graph::anyVertexWithExactlyOneNonColoredNeighbor(vector<Vertex> set,
-                                                  vector<Vertex> v_set) const
+int Graph::getVertexWithOneNonColoredNeighbor(vector<Vertex> set,
+  vector<Vertex> v_set) const
 {
   for (int i = 0; i < set.size(); i++)
   {
@@ -576,192 +817,6 @@ int Graph::anyVertexWithExactlyOneNonColoredNeighbor(vector<Vertex> set,
 }
 
 // ------------------------------------------------------------------------
-// recursiveForcingSet: recursive function for finding the forcing set
-// set: vertex set of graph
-// l: your k
-// s: starting point
-// comb: single set
-// save: all sets saved
-// limit: limit the amount of sets to save
-// found: true if a forcing set has been found
-// ------------------------------------------------------------------------
-void Graph::recursiveForcingSet(vector<int>& set, int l, int s,
-  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
-{
-  if (save.size() >= limit && limit > 0)
-    return;
-  if (l == 0)
-  {
-    if (isForcingSet(comb))
-    {
-      comb.shrink_to_fit();
-      save.push_back(comb);
-      found = true;
-    }
-    return;
-  }
-  for (int i = s; i <= set.size() - l; i++)
-  {
-    comb[comb.size() - l] = set[i];
-    recursiveForcingSet(set, l-1, i+1, comb, save, limit, found);
-  }
-}
-
-// ------------------------------------------------------------------------
-// recursiveIndependentSet: recursive function for finding the
-//  maximum independent set
-// set: vertex set of graph
-// l: your k
-// s: starting point
-// comb: single set
-// save: all sets saved
-// limit: limit the amount of sets to save
-// found: true if a forcing set has been found
-// ------------------------------------------------------------------------
-void Graph::recursiveIndependentSet(vector<int>& set, int l, int s,
-  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
-{
-  if (save.size() >= limit && limit > 0)
-    return;
-  if (l == 0)
-  {
-    if (isIndependentSet(comb))
-    {
-      comb.shrink_to_fit();
-      save.push_back(comb);
-      found = true;
-    }
-    return;
-  }
-  for (int i = s; i <= set.size() - l; i++)
-  {
-    comb[comb.size() - l] = set[i];
-    recursiveIndependentSet(set, l-1, i+1, comb, save, limit, found);
-  }
-}
-
-// ------------------------------------------------------------------------
-// bronKerbosch: recursive function for finding maximal cliques
-// r: EMPTY SET
-// p: vertex set of graph
-// x: ANOTHER EMPTY ONLY AT FIRST THOUGH WELL IDK
-// save: all sets saved
-// limit: limit the amount of sets to save
-// found: true if a forcing set has been found
-// ------------------------------------------------------------------------
-void Graph::bronKerbosch(vector<int> r, vector<int> p, vector<int> x,
-  vector<vector<int> >& save, bool& found)
-{
-  if (p.size() == 0 && x.size() == 0)
-  {
-    save.push_back(r);
-    found = true;
-    return;
-  }
-
-  Vertex u = getVertexById(Tools::setUnion(p, x)[0], graphSet);
-  vector<int> pdnu = Tools::setDifference(p, u.getNeighbors());
-  for (int i = 0; i < pdnu.size(); i++)
-  {
-    vector<int> v;
-    Vertex v_vertex = getVertexById(pdnu[i], graphSet);
-    v.push_back(pdnu[i]);
-    v.shrink_to_fit();
-    bronKerbosch(Tools::setUnion(r, v),
-                 Tools::setIntersection(p, v_vertex.getNeighbors()),
-                 Tools::setIntersection(x, v_vertex.getNeighbors()),
-                 save, found);
-    p = Tools::setDifference(p, v);
-    x = Tools::setUnion(x, v);
-  }
-}
-
-// ------------------------------------------------------------------------
-// findZeroForcingSet: finds the zero forcing set by BRUTEFORCE MADNESS
-// limit: limits the amount of sets returned
-// returns a vector<vector<int> > i'm tired
-// ------------------------------------------------------------------------
-vector<vector<int> > Graph::findZeroForcingSets(int limit)
-{
-  int lower_bound = getMinDegree(); // From Teach's paper, thanks Teach
-  vector<vector<int> > results;
-  vector<int> v_set;
-  bool found = false;
-
-  for (int i = 0; i < getVertexNum(); i++)
-    v_set.push_back(i);
-
-  for (int i = lower_bound; i < getVertexNum() && !found; i++)
-  {
-    vector<int> c;
-    for (int j = 0; j < i; j++)
-      c.push_back(0);
-    recursiveForcingSet(v_set, i, 0, c, results, limit, found);
-  }
-
-  return results;
-}
-
-// ------------------------------------------------------------------------
-// findMaximumIndependentSets: finds maximum independent sets which is also
-// the independence number
-// limit: limits the amount of sets to return
-// returns a vector<vector<int> >
-// ------------------------------------------------------------------------
-vector<vector<int> > Graph::findMaximumIndependentSets(int limit)
-{
-  int upper_bound = getVertexNum() - ceil((getVertexNum()-1) / getMaxDegree());
-  vector<vector<int> > results;
-  vector<int> v_set;
-  bool found = false;
-
-  for (int i = 0; i < getVertexNum(); i++)
-    v_set.push_back(i);
-
-  for (int i = upper_bound; i >= 1 && !found; i--)
-  {
-    vector<int> c;
-    for (int j = 0; j < i; j++)
-      c.push_back(0);
-    recursiveIndependentSet(v_set, i, 0, c, results, limit, found);
-  }
-
-  return results;
-}
-
-// ------------------------------------------------------------------------
-// findMaximalCliques: finds maximal cliques
-// returns a vector<vector<int> >
-// ------------------------------------------------------------------------
-vector<vector<int> > Graph::findMaximalCliques()
-{
-  vector<vector<int> > results;
-  vector<int> p, r, x;
-  vector<Vertex> v_set_sorted = graphSet.vertexSet;
-  bool found = false;
-
-  for (int i = 0; i < getVertexNum(); i++)
-    p.push_back(i); // god help up if we end up having to delete vertices
-
-  sortVertexSetByDegreeNonDecreasing(v_set_sorted);
-
-  for (int i = 0; i < v_set_sorted.size(); i++)
-  {
-    vector<int> v;
-    v.push_back(v_set_sorted[i].getId());
-    v.shrink_to_fit();
-    bronKerbosch(Tools::setUnion(r, v),
-                 Tools::setIntersection(p, v_set_sorted[i].getNeighbors()),
-                 Tools::setIntersection(x, v_set_sorted[i].getNeighbors()),
-                 results, found);
-    p = Tools::setDifference(p, v);
-    x = Tools::setUnion(x, v);
-  }
-
-  return results;
-}
-
-// ------------------------------------------------------------------------
 // isIndependentSet: checks if set is an independent set of this graph
 // returns a bool
 // ------------------------------------------------------------------------
@@ -776,42 +831,6 @@ bool Graph::isIndependentSet(vector<int> set)
     }
   }
   return true;
-}
-
-// ------------------------------------------------------------------------
-// welshPowell: colors a graph via the welshPowell algorithm calcluting the
-// chromatic number of a graph in the process
-// returns void
-// ------------------------------------------------------------------------
-void Graph::welshPowell()
-{
-  int color = 1;
-  for (int i = 0; i < graphSet.vertexSet.size(); i++)
-    {
-      //if vertex is uncolored
-      if (graphSet.vertexSet[i].getColor() == 0)
-        {
-          //get neighbors
-          vector<int> neighbors = graphSet.vertexSet[i].getNeighbors();
-          graphSet.vertexSet[i].setColor(color);
-
-          //for every other vertex in vertex set
-          for (int a = 0; a < graphSet.vertexSet.size(); a++)
-            {
-              //if the other vertex is not a neighbor
-              if (!Tools::isInSet(neighbors, graphSet.vertexSet[a]))
-                {
-                  //color it differently
-                  graphSet.vertexSet[a].setColor(color);
-                }
-            }
-          //make a new color
-          color++;
-        }
-    }
-
-  //set chromatic color for graphSet
-  setChromaticNumber(color - 1); //-1 for to account for last iteration
 }
 
 // ------------------------------------------------------------------------
@@ -878,12 +897,3 @@ int Graph::getAverageDegree() const
 {
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
-
-vector<Vertex> Graph::getVertexSetAsVector() const
-{
-  return graphSet.vertexSet;
-}
-
-int Graph::getChromaticNumber() const { return chromaticNumber; }
-
-void Graph::setChromaticNumber(int n) { chromaticNumber = n; }

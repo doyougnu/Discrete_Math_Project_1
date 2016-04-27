@@ -34,16 +34,28 @@ class Graph
     std::vector<int> findKResElimSeq(std::vector<int>, int, bool);
     int findAnnihilationNumber();
     GraphSet findMinimumSpanningTree(int, bool);
+
+    std::vector<std::vector<int> > findZeroForcingSets(int);
+    void recursiveForcingSet(std::vector<int>&, int, int, std::vector<int>&,
+      std::vector<std::vector<int> >&, int&, bool&);
+
+    std::vector<std::vector<int> > findMaximumIndependentSets(int);
+    std::vector<std::vector<int> > findMaximumIndependentSets(GraphSet, int);
+    void recursiveIndependentSet(std::vector<int>&, int, int, std::vector<int>&,
+      std::vector<std::vector<int> >&, int&, bool&);
+
+    std::vector<std::vector<int> > findMaximalCliques();
+    void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
+      std::vector<std::vector<int> >&, bool&);
+
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
     void sortVertexSetByDegreeNonDecreasing(std::vector<Vertex>&);
-    std::vector<std::vector<int> > findZeroForcingSets(int);
-    std::vector<std::vector<int> > findMaximumIndependentSets(int);
-    std::vector<std::vector<int> > findMaximalCliques();
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
     void addEdgeToGraphSet(Edge, GraphSet&, GraphSet);
     void addVertexToGraphSet(Vertex, GraphSet&);
+    void removeVertexFromGraphSet(int, GraphSet&);
     bool isSpanningTree(GraphSet, GraphSet) const;
     bool isSpanningTree(GraphSet) const;
     bool isEdgeInGraph(Edge, GraphSet) const;
@@ -54,16 +66,9 @@ class Graph
     std::vector<std::vector<int> > genAllEdges(int);
     int maxPossibleEdges(int);
     bool isForcingSet(std::vector<int>);
-    int anyVertexWithExactlyOneNonColoredNeighbor(std::vector<Vertex>,
-                                               std::vector<Vertex>) const;
+    int getVertexWithOneNonColoredNeighbor(std::vector<Vertex>,
+      std::vector<Vertex>) const;
     bool isIndependentSet(std::vector<int>);
-    void recursiveForcingSet(std::vector<int>&, int, int, std::vector<int>&,
-      std::vector<std::vector<int> >&, int&, bool&);
-    void recursiveIndependentSet(std::vector<int>&, int, int, std::vector<int>&,
-      std::vector<std::vector<int> >&, int&, bool&);
-    void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
-      std::vector<std::vector<int> >&, bool&);
-    void welshPowell();
 
     // Accessors
     int getEdgeNum() const;
@@ -79,14 +84,9 @@ class Graph
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
-    int getChromaticNumber() const;
-
-    // Mutators
-    void setChromaticNumber(int);
 
   private:
     std::vector<int> degreeSequence;
-    int chromaticNumber;
     GraphSet graphSet;
 };
 
