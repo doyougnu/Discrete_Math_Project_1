@@ -84,6 +84,8 @@ class Graph
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
+    int findChromaticNumber(GraphSet, int);
+    GraphSet getGraphSet() const;
 
   private:
     std::vector<int> degreeSequence;

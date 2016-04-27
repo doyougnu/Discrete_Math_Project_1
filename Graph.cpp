@@ -392,6 +392,25 @@ vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
 }
 
 // ------------------------------------------------------------------------
+// findMaximumIndependentSets: finds maximum independent sets which is also
+// the independence number
+// graph: graph to check for independent sets
+// limit: limits the amount of sets to return
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+int Graph::findChromaticNumber(GraphSet graph, int counter)
+{
+  if (graph.vertexSet.empty())
+    {
+      return counter;
+    }
+
+  //calculate independence set
+  vector<vector<int > > independentSet = findMaximumIndependentSets(graph
+                                                                    , 1);
+}
+
+// ------------------------------------------------------------------------
 // recursiveIndependentSet: recursive function for finding the
 //  maximum independent set
 // set: vertex set of graph
@@ -897,3 +916,5 @@ int Graph::getAverageDegree() const
 {
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
+
+Graph::GraphSet Graph::getGraphSet() const { return graphSet; }
