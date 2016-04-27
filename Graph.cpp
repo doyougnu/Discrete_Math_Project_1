@@ -392,6 +392,64 @@ vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
 }
 
 // ------------------------------------------------------------------------
+// findMaximumIndependentSets: finds maximum independent sets which is also
+// the independence number
+// graph: graph to check for independent sets
+// limit: limits the amount of sets to return
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+void Graph::findChromaticNumber(GraphSet graph, int counter)
+{
+  if (graph.vertexSet.empty() || graph.edgeSet.empty())
+    {
+      setChromaticNumber(counter);
+      return;
+    }
+
+  //calculate independence set
+  vector<vector<int > > independentSet = findMaximumIndependentSets(graph
+                                                                    , 1);
+
+  if (!independentSet.empty())
+    {
+      //for each vertex in independent set, remove edges
+      for (auto& vertex : independentSet[0]) //just use the first independentSet
+        {
+          for (auto& edge : graph.edgeSet)
+            {
+              if (edge.getFrom() == vertex || edge.getTo() == vertex)
+                {
+                  removeEdgeFromGraphSet(edge, graph);
+                }
+            }
+        }
+
+      //now remove independentSet vertices from vertexSet, should be a setDifference
+      for (auto& indep_vertex : independentSet[0])
+        {
+          for (int i = 0; i < graph.vertexSet.size(); i++)
+            {
+              if (indep_vertex == graph.vertexSet[i])
+                {
+                  //removeVertexFromGraphSet was throwing sigsegs
+                  graph.vertexSet.erase(graph.vertexSet.begin() + i);
+                  i--;
+                }
+            }
+        }
+    }
+  else
+    {
+      //independentSet is empty so we only have 1 vertex
+      graph.vertexSet.clear();
+    }
+
+  //recursive call
+  counter++;
+  findChromaticNumber(graph, counter);
+}
+
+// ------------------------------------------------------------------------
 // recursiveIndependentSet: recursive function for finding the
 //  maximum independent set
 // set: vertex set of graph
@@ -581,6 +639,27 @@ void Graph::addEdgeToGraphSet(Edge edge, GraphSet &graph, GraphSet from)
       addVertexToGraphSet(v, graph);
 
   }
+}
+
+// ------------------------------------------------------------------------
+// removeEdgeFromGraphSet: given an edge and a graphSet function travels
+// edgeset, finds the edge and removes it
+// edge: edge to remove
+// graph: graph to remove edge from
+// ------------------------------------------------------------------------
+void Graph::removeEdgeFromGraphSet(Edge edge, GraphSet& graph)
+{
+  if (!isEdgeInGraph(edge, graph)) // Make sure we don't add dupes
+    {
+      for (int i = 0; i < graph.edgeSet.size(); i++)
+        {
+          if (graph.edgeSet[i] == edge)
+            {
+              //erase method needs an iterator
+              graph.edgeSet.erase(graph.edgeSet.begin() + i);
+            }
+        }
+    }
 }
 
 // ------------------------------------------------------------------------
@@ -970,3 +1049,9 @@ int Graph::getAverageDegree() const
 {
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
+
+Graph::GraphSet Graph::getGraphSet() const { return graphSet; }
+
+int Graph::getChromaticNumber() const { return chromaticNumber; }
+
+void Graph::setChromaticNumber(int n) { chromaticNumber = n; }

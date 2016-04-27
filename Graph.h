@@ -56,6 +56,7 @@ class Graph
     void addEdgeToGraphSet(Edge, GraphSet&, GraphSet);
     void addVertexToGraphSet(Vertex, GraphSet&);
     void removeVertexFromGraphSet(int, GraphSet&);
+    void removeEdgeFromGraphSet(Edge, GraphSet&);
     bool isSpanningTree(GraphSet, GraphSet) const;
     bool isSpanningTree(GraphSet) const;
     bool isEdgeInGraph(Edge, GraphSet) const;
@@ -72,6 +73,7 @@ class Graph
       std::vector<Vertex>) const;
     bool isIndependentSet(std::vector<int>);
     bool isDominatingSet(std::vector<int>);
+    void findChromaticNumber(GraphSet, int);
 
     // Accessors
     int getEdgeNum() const;
@@ -87,8 +89,12 @@ class Graph
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
+    void setChromaticNumber(int);
+    int getChromaticNumber() const;
+    GraphSet getGraphSet() const;
 
   private:
+    int chromaticNumber;
     std::vector<int> degreeSequence;
     GraphSet graphSet;
 };
