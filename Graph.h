@@ -42,7 +42,7 @@ class Graph
     std::vector<std::vector<int> > findMaximumIndependentSets(int);
     std::vector<std::vector<int> > findMaximumIndependentSets(GraphSet, int);
     void recursiveIndependentSet(std::vector<int>&, int, int, std::vector<int>&,
-      std::vector<std::vector<int> >&, int&, bool&);
+      std::vector<std::vector<int> >&, int&, bool&, GraphSet&);
 
     std::vector<std::vector<int> > findMaximalCliques();
     void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
@@ -78,6 +78,7 @@ class Graph
     int getVertexWithOneNonColoredNeighbor(std::vector<Vertex>,
       std::vector<Vertex>) const;
     bool isIndependentSet(std::vector<int>);
+    bool isIndependentSet(std::vector<int>, GraphSet);
     bool isDominatingSet(std::vector<int>);
 
     // Accessors

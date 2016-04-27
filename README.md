@@ -15,7 +15,7 @@
 * Independence number and maximum independent sets
 * Clique number and maximum cliques using [Bron Kerbosch Algorithm][1]
 * Chromatic number
-* Domination number and minumu dominating sets
+* Domination number and minimum dominating sets
 
 [1]: https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
 [2]: https://en.wikipedia.org/wiki/Prim's_algorithm

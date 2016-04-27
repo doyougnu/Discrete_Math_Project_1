@@ -364,14 +364,16 @@ vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
   int limit)
 {
   // find max degree
-  int max_degree = graph.vertexSet[0].getDegree();
+  double max_degree = graph.vertexSet[0].getDegree();
   for (int i = 1; i < graph.vertexSet.size(); i++)
     if (graph.vertexSet[i].getDegree() > max_degree)
       max_degree = graph.vertexSet[i].getDegree();
 
   // get upper bound
-  int upper_bound = graph.vertexSet.size()
-    - ceil((graph.vertexSet.size()-1) / max_degree);
+  int upper_bound = graph.vertexSet.size();
+  if (!graph.edgeSet.empty())
+    upper_bound = graph.vertexSet.size()
+      - ceil((graph.vertexSet.size()-1) / max_degree);
 
   vector<vector<int> > results;
   vector<int> v_set;
@@ -385,7 +387,7 @@ vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
     vector<int> c;
     for (int j = 0; j < i; j++)
       c.push_back(0);
-    recursiveIndependentSet(v_set, i, 0, c, results, limit, found);
+    recursiveIndependentSet(v_set, i, 0, c, results, limit, found, graph);
   }
 
   return results;
@@ -403,13 +405,14 @@ vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
 // found: true if a forcing set has been found
 // ------------------------------------------------------------------------
 void Graph::recursiveIndependentSet(vector<int>& set, int l, int s,
-  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
+  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found,
+  GraphSet& graph)
 {
   if (save.size() >= limit && limit > 0)
     return;
   if (l == 0)
   {
-    if (isIndependentSet(comb))
+    if (isIndependentSet(comb, graph))
     {
       comb.shrink_to_fit();
       save.push_back(comb);
@@ -420,7 +423,7 @@ void Graph::recursiveIndependentSet(vector<int>& set, int l, int s,
   for (int i = s; i <= set.size() - l; i++)
   {
     comb[comb.size() - l] = set[i];
-    recursiveIndependentSet(set, l-1, i+1, comb, save, limit, found);
+    recursiveIndependentSet(set, l-1, i+1, comb, save, limit, found, graph);
   }
 }
 
@@ -501,49 +504,20 @@ void Graph::bronKerbosch(vector<int> r, vector<int> p, vector<int> x,
 // ------------------------------------------------------------------------
 void Graph::findChromaticNumber(GraphSet graph, int counter)
 {
-  if (graph.vertexSet.empty() || graph.edgeSet.empty())
-    {
-      setChromaticNumber(counter);
-      return;
-    }
+  if (graph.vertexSet.empty())
+  {
+    setChromaticNumber(counter);
+    return;
+  }
 
   //calculate independence set
-  vector<vector<int > > independentSet = findMaximumIndependentSets(graph
-                                                                    , 1);
+  vector<vector<int > > independentSet = findMaximumIndependentSets(graph, 1);
 
   if (!independentSet.empty())
-    {
-      //for each vertex in independent set, remove edges
-      for (auto& vertex : independentSet[0]) //just use the first independentSet
-        {
-          for (auto& edge : graph.edgeSet)
-            {
-              if (edge.getFrom() == vertex || edge.getTo() == vertex)
-                {
-                  removeEdgeFromGraphSet(edge, graph);
-                }
-            }
-        }
-
-      //now remove independentSet vertices from vertexSet, should be a setDifference
-      for (auto& indep_vertex : independentSet[0])
-        {
-          for (int i = 0; i < graph.vertexSet.size(); i++)
-            {
-              if (indep_vertex == graph.vertexSet[i])
-                {
-                  //removeVertexFromGraphSet was throwing sigsegs
-                  graph.vertexSet.erase(graph.vertexSet.begin() + i);
-                  i--;
-                }
-            }
-        }
-    }
-  else
-    {
-      //independentSet is empty so we only have 1 vertex
-      graph.vertexSet.clear();
-    }
+  {
+    for (auto& vertex : independentSet[0]) //just use the first independentSet
+      removeVertexFromGraphSet(vertex, graph); // fixed it
+  }
 
   //recursive call
   counter++;
@@ -743,6 +717,12 @@ void Graph::removeVertexFromGraphSet(int v, GraphSet &graph)
   {
     if (graph.vertexSet[i].getId() == v)
     {
+      for (int j = 0; j < graph.vertexSet[i].getNeighbors().size(); j++)
+      {
+        if (graph.vertexSet[i].getNeighbors()[j] == v)
+          graph.vertexSet[i].getNeighbors().erase(graph.vertexSet[i].
+            getNeighbors().begin() + j--);
+      }
       graph.vertexSet.erase(graph.vertexSet.begin() + i);
       for (int j = 0; j < graph.edgeSet.size(); j++)
       {
@@ -750,16 +730,6 @@ void Graph::removeVertexFromGraphSet(int v, GraphSet &graph)
           graph.edgeSet.erase(graph.edgeSet.begin() + j--); // lol
       }
       break;
-    }
-  }
-  // now delete them from neighbors
-  for (int i = 0; i < graph.vertexSet.size(); i++)
-  {
-    for (int j = 0; j < graph.vertexSet[i].getNeighbors().size(); j++)
-    {
-      if (graph.vertexSet[i].getNeighbors()[j] == v)
-        graph.vertexSet[i].getNeighbors().erase(graph.vertexSet[i].
-          getNeighbors().begin() + j--);
     }
   }
   // this method is shitty but whatever
@@ -1005,11 +975,20 @@ int Graph::getVertexWithOneNonColoredNeighbor(vector<Vertex> set,
 // ------------------------------------------------------------------------
 bool Graph::isIndependentSet(vector<int> set)
 {
+  return isIndependentSet(set, graphSet);
+}
+
+// ------------------------------------------------------------------------
+// isIndependentSet: checks if set is an independent set of the graph
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isIndependentSet(vector<int> set, GraphSet graph)
+{
   for (int v = 0; v < set.size(); v++)
   {
-    for (int n = 0; n < graphSet.vertexSet[set[v]].getNeighbors().size(); n++)
+    for (int n = 0; n < getVertexById(set[v], graph).getNeighbors().size(); n++)
     {
-      if (Tools::isInSet(set, graphSet.vertexSet[set[v]].getNeighbors()[n]))
+      if (Tools::isInSet(set, getVertexById(set[v], graph).getNeighbors()[n]))
         return false;
     }
   }
