@@ -392,64 +392,6 @@ vector<vector<int> > Graph::findMaximumIndependentSets(GraphSet graph,
 }
 
 // ------------------------------------------------------------------------
-// findMaximumIndependentSets: finds maximum independent sets which is also
-// the independence number
-// graph: graph to check for independent sets
-// limit: limits the amount of sets to return
-// returns a vector<vector<int> >
-// ------------------------------------------------------------------------
-void Graph::findChromaticNumber(GraphSet graph, int counter)
-{
-  if (graph.vertexSet.empty() || graph.edgeSet.empty())
-    {
-      setChromaticNumber(counter);
-      return;
-    }
-
-  //calculate independence set
-  vector<vector<int > > independentSet = findMaximumIndependentSets(graph
-                                                                    , 1);
-
-  if (!independentSet.empty())
-    {
-      //for each vertex in independent set, remove edges
-      for (auto& vertex : independentSet[0]) //just use the first independentSet
-        {
-          for (auto& edge : graph.edgeSet)
-            {
-              if (edge.getFrom() == vertex || edge.getTo() == vertex)
-                {
-                  removeEdgeFromGraphSet(edge, graph);
-                }
-            }
-        }
-
-      //now remove independentSet vertices from vertexSet, should be a setDifference
-      for (auto& indep_vertex : independentSet[0])
-        {
-          for (int i = 0; i < graph.vertexSet.size(); i++)
-            {
-              if (indep_vertex == graph.vertexSet[i])
-                {
-                  //removeVertexFromGraphSet was throwing sigsegs
-                  graph.vertexSet.erase(graph.vertexSet.begin() + i);
-                  i--;
-                }
-            }
-        }
-    }
-  else
-    {
-      //independentSet is empty so we only have 1 vertex
-      graph.vertexSet.clear();
-    }
-
-  //recursive call
-  counter++;
-  findChromaticNumber(graph, counter);
-}
-
-// ------------------------------------------------------------------------
 // recursiveIndependentSet: recursive function for finding the
 //  maximum independent set
 // set: vertex set of graph
@@ -547,6 +489,122 @@ void Graph::bronKerbosch(vector<int> r, vector<int> p, vector<int> x,
                  save, found);
     p = Tools::setDifference(p, v);
     x = Tools::setUnion(x, v);
+  }
+}
+
+// ------------------------------------------------------------------------
+// findMaximumIndependentSets: finds maximum independent sets which is also
+// the independence number
+// graph: graph to check for independent sets
+// limit: limits the amount of sets to return
+// returns a vector<vector<int> >
+// ------------------------------------------------------------------------
+void Graph::findChromaticNumber(GraphSet graph, int counter)
+{
+  if (graph.vertexSet.empty() || graph.edgeSet.empty())
+    {
+      setChromaticNumber(counter);
+      return;
+    }
+
+  //calculate independence set
+  vector<vector<int > > independentSet = findMaximumIndependentSets(graph
+                                                                    , 1);
+
+  if (!independentSet.empty())
+    {
+      //for each vertex in independent set, remove edges
+      for (auto& vertex : independentSet[0]) //just use the first independentSet
+        {
+          for (auto& edge : graph.edgeSet)
+            {
+              if (edge.getFrom() == vertex || edge.getTo() == vertex)
+                {
+                  removeEdgeFromGraphSet(edge, graph);
+                }
+            }
+        }
+
+      //now remove independentSet vertices from vertexSet, should be a setDifference
+      for (auto& indep_vertex : independentSet[0])
+        {
+          for (int i = 0; i < graph.vertexSet.size(); i++)
+            {
+              if (indep_vertex == graph.vertexSet[i])
+                {
+                  //removeVertexFromGraphSet was throwing sigsegs
+                  graph.vertexSet.erase(graph.vertexSet.begin() + i);
+                  i--;
+                }
+            }
+        }
+    }
+  else
+    {
+      //independentSet is empty so we only have 1 vertex
+      graph.vertexSet.clear();
+    }
+
+  //recursive call
+  counter++;
+  findChromaticNumber(graph, counter);
+}
+
+// ------------------------------------------------------------------------
+// findMinimumDominatingSets: finds the minumum dominating sets
+// limit: limits the amount of sets returned
+// returns a vector<vector<int> > i'm tired
+// ------------------------------------------------------------------------
+vector<vector<int> > Graph::findMinimumDominatingSets(int limit)
+{
+  int lower_bound = ceil(getVertexNum() / (1 + getMaxDegree()));
+  vector<vector<int> > results;
+  vector<int> v_set;
+  bool found = false;
+
+  for (int i = 0; i < getVertexNum(); i++)
+    v_set.push_back(i);
+
+  for (int i = lower_bound; i < getVertexNum() && !found; i++)
+  {
+    vector<int> c;
+    for (int j = 0; j < i; j++)
+      c.push_back(0);
+    recursiveDominatingSet(v_set, i, 0, c, results, limit, found);
+  }
+
+  return results;
+}
+
+// ------------------------------------------------------------------------
+// recursiveDominatingSet: recursive function for finding the dominating set
+// set: vertex set of graph
+// l: your k
+// s: starting point
+// comb: single set
+// save: all sets saved
+// limit: limit the amount of sets to save
+// found: true if a forcing set has been found
+// ------------------------------------------------------------------------
+void Graph::recursiveDominatingSet(vector<int>& set, int l, int s,
+  vector<int>& comb, vector<vector<int> >& save, int& limit, bool& found)
+{
+  if (save.size() >= limit && limit > 0)
+    return;
+  if (l == 0)
+  {
+    if (isDominatingSet(comb))
+    {
+      comb.shrink_to_fit();
+      save.push_back(comb);
+      found = true;
+    }
+    return;
+  }
+  for (int i = s; i <= set.size() - l; i++)
+  {
+    comb[comb.size() - l] = set[i];
+    recursiveDominatingSet(set, l-1, i+1, comb, save, limit, found);
   }
 }
 
@@ -778,7 +836,9 @@ bool Graph::isVertexInSet(Vertex vertex, vector<Vertex> vertexSet) const
   for (int i = 0; i < vertexSet.size(); i++)
   {
     if (vertex == vertexSet[i])
+    {
       return true;
+    }
   }
   return false;
 }
@@ -967,15 +1027,14 @@ bool Graph::isDominatingSet(vector<int> set)
     s.push_back(graphSet.vertexSet[set[i]]);
 
   ngs = s;
-  for (int i = 0; i < graphSet.vertexSet.size(); i++)
+  for (int i = 0; i < s.size(); i++)
   {
-    for (int j = 0; j < graphSet.vertexSet[i].getNeighbors().size(); j++)
+    for (int j = 0; j < s[i].getNeighbors().size(); j++)
     {
-      Vertex v = getVertexById(graphSet.vertexSet[i].getNeighbors()[j],
-        graphSet);
+      Vertex v = getVertexById(s[i].getNeighbors()[j], graphSet);
       if (v.getId() != -1)
       {
-        if (!isVertexInSet(v, ngs) && isVertexInSet(v, s))
+        if (!isVertexInSet(v, ngs))
           ngs.push_back(v);
       }
     }

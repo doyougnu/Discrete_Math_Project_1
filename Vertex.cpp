@@ -53,5 +53,5 @@ std::vector<int> Vertex::getNeighbors() const { return neighbors; }
 // ------------------------------------------------------------------------
 bool Vertex::operator==(const Vertex &rhs)
 {
-  return (id == rhs.id && color == rhs.color);
+  return (id == rhs.id && color == rhs.color && neighbors == rhs.neighbors);
 }

@@ -217,7 +217,9 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 8:
         {
-          cout << "gamma(G) = " << "?" << endl;
+          vector<vector<int> > mds = graph.findMinimumDominatingSets(0);
+          cout << "gamma(G) = " << mds[0].size() << endl << endl;
+          printSets(mds, false, 10);
           break;
         }
         case 10:
@@ -233,6 +235,21 @@ int main (int argc, char *argv[], char *envp[])
         case 101: // testing stuff
         {
           cout << "WOW! You found the secret testing command." << endl;
+          vector<int> fs;
+          int id = 0;
+          cout << "Enter up to " << graph.getVertexNum()
+               << " vertices from 0 to " << graph.getVertexNum() - 1
+               << " (enter -1 to start): " << endl;
+          cin >> id;
+          while (id != -1)
+          {
+            fs.push_back(id);
+            cin >> id;
+          }
+          if (graph.isDominatingSet(fs))
+            cout << "Yes!" << endl;
+          else
+            cout << "No!" << endl;
           break;
         }
         default:

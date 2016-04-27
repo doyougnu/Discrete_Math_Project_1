@@ -48,6 +48,12 @@ class Graph
     void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
       std::vector<std::vector<int> >&, bool&);
 
+    void findChromaticNumber(GraphSet, int);
+
+    std::vector<std::vector<int> > findMinimumDominatingSets(int);
+    void recursiveDominatingSet(std::vector<int>&, int, int, std::vector<int>&,
+      std::vector<std::vector<int> >&, int&, bool&);
+
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
     void sortVertexSetByDegreeNonDecreasing(std::vector<Vertex>&);
 
@@ -73,7 +79,6 @@ class Graph
       std::vector<Vertex>) const;
     bool isIndependentSet(std::vector<int>);
     bool isDominatingSet(std::vector<int>);
-    void findChromaticNumber(GraphSet, int);
 
     // Accessors
     int getEdgeNum() const;
