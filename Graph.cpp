@@ -603,6 +603,27 @@ void Graph::addEdgeToGraphSet(Edge edge, GraphSet &graph, GraphSet from)
 }
 
 // ------------------------------------------------------------------------
+// removeEdgeFromGraphSet: given an edge and a graphSet function travels
+// edgeset, finds the edge and removes it
+// edge: edge to remove
+// graph: graph to remove edge from
+// ------------------------------------------------------------------------
+void Graph::removeEdgeFromGraphSet(Edge edge, GraphSet& graph)
+{
+  if (!isEdgeInGraph(edge, graph)) // Make sure we don't add dupes
+    {
+      for (int i = 0; i < graph.edgeSet.size(); i++)
+        {
+          if (graph.edgeSet[i] == edge)
+            {
+              //erase method needs an iterator
+              graph.edgeSet.erase(graph.edgeSet.begin() + i);
+            }
+        }
+    }
+}
+
+// ------------------------------------------------------------------------
 // addVertexToGraphSet: adds a vertex to the graph set without duplicates
 // vertex: vertex to add
 // graph: graph to add vertex to

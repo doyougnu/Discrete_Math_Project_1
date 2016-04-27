@@ -56,6 +56,7 @@ class Graph
     void addEdgeToGraphSet(Edge, GraphSet&, GraphSet);
     void addVertexToGraphSet(Vertex, GraphSet&);
     void removeVertexFromGraphSet(int, GraphSet&);
+    void removeEdgeFromGraphSet(Edge, GraphSet&);
     bool isSpanningTree(GraphSet, GraphSet) const;
     bool isSpanningTree(GraphSet) const;
     bool isEdgeInGraph(Edge, GraphSet) const;
