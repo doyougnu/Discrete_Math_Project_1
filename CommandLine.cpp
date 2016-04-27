@@ -211,8 +211,8 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 7:
         {
-          cout << "chi(G) = " << "?" << endl;
           graph.findChromaticNumber(graph.getGraphSet(), 0);
+          cout << "chi(G) = " << graph.getChromaticNumber() << endl;
           break;
         }
         case 8:

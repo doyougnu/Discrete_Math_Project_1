@@ -70,6 +70,7 @@ class Graph
     int getVertexWithOneNonColoredNeighbor(std::vector<Vertex>,
       std::vector<Vertex>) const;
     bool isIndependentSet(std::vector<int>);
+    void findChromaticNumber(GraphSet, int);
 
     // Accessors
     int getEdgeNum() const;
@@ -85,10 +86,12 @@ class Graph
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
-    int findChromaticNumber(GraphSet, int);
+    void setChromaticNumber(int);
+    int getChromaticNumber() const;
     GraphSet getGraphSet() const;
 
   private:
+    int chromaticNumber;
     std::vector<int> degreeSequence;
     GraphSet graphSet;
 };
