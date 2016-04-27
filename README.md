@@ -7,15 +7,15 @@
 * .am - adjacency matrix
 * .es - edge set
 
-## Algorithms
-* [Prim's Algorithm][2]
-* [Havel-Hakimi Algorithm][3]
-* [Annihilation Number Algorithm][4]
-* [Bron Kerbosch Algorithm][1]
-
-## BRUTEFORCE STUFF
-* Zero Forcing Number and minimum forcing sets
+## Functions
+* k-residue and elimination sequence using [Havel-Hakimi Algorithm][3]
+* Annihilation number using [this algorithm][4]
+* Minimum spanning tree using [Prim's Algorithm][2]
+* Forcing set and zero forcing number
 * Independence number and maximum independent sets
+* Clique number and maximum cliques using [Bron Kerbosch Algorithm][1]
+* Chromatic number
+* Domination number and minumu dominating sets
 
 [1]: https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
 [2]: https://en.wikipedia.org/wiki/Prim's_algorithm
