@@ -76,6 +76,7 @@ void printAlgorithms()
        << "6. Find maximum cliques and clique number" << endl
        << "7. Find the chromatic number" << endl
        << "8. Find minimum dominating sets and domination number" << endl
+       << "9. Find k-partite number" << endl
        << "10. Show available Algorithms" << endl
        << "11. Show trivial Graph information" << endl;
 }
@@ -211,8 +212,7 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 7:
         {
-          graph.findChromaticNumber(graph.getGraphSet(), 0);
-          cout << "chi(G) = " << graph.getChromaticNumber() << endl;
+          cout << "chi(G) = " << graph.findChromaticNumber() << endl;
           break;
         }
         case 8:
@@ -220,6 +220,11 @@ int main (int argc, char *argv[], char *envp[])
           vector<vector<int> > mds = graph.findMinimumDominatingSets(0);
           cout << "gamma(G) = " << mds[0].size() << endl << endl;
           printSets(mds, false, 10);
+          break;
+        }
+        case 9:
+        {
+          cout << "k-partite = " << graph.findKPartite() << endl;
           break;
         }
         case 10:
@@ -247,6 +252,18 @@ int main (int argc, char *argv[], char *envp[])
             cin >> id;
           }
           if (graph.isDominatingSet(fs))
+            cout << "Yes!" << endl;
+          else
+            cout << "No!" << endl;
+          break;
+        }
+        case 202: // testing stuff
+        {
+          cout << "WOW! You found the secret testing command." << endl;
+          int chiX = 0;
+          cout << "# of colors: ";
+          cin >> chiX;
+          if (graph.canColorWith(chiX))
             cout << "Yes!" << endl;
           else
             cout << "No!" << endl;

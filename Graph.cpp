@@ -496,32 +496,29 @@ void Graph::bronKerbosch(vector<int> r, vector<int> p, vector<int> x,
 }
 
 // ------------------------------------------------------------------------
-// findMaximumIndependentSets: finds maximum independent sets which is also
-// the independence number
-// graph: graph to check for independent sets
-// limit: limits the amount of sets to return
-// returns a vector<vector<int> >
+// findChromaticNumber: finds the chromatic number of this graph
+// returns an int
 // ------------------------------------------------------------------------
-void Graph::findChromaticNumber(GraphSet graph, int counter)
+int Graph::findChromaticNumber()
 {
-  if (graph.vertexSet.empty())
-  {
-    setChromaticNumber(counter);
-    return;
-  }
+  return findChromaticNumber(graphSet);
+}
 
-  //calculate independence set
-  vector<vector<int > > independentSet = findMaximumIndependentSets(graph, 1);
+// ------------------------------------------------------------------------
+// findChromaticNumber: finds the chromatic number of this graph
+// graph: graph set to check
+// returns an int
+// ------------------------------------------------------------------------
+int Graph::findChromaticNumber(GraphSet graph)
+{
+  int chi = 2;
+  if (graph.edgeSet.empty())
+    chi = 1;
 
-  if (!independentSet.empty())
-  {
-    for (auto& vertex : independentSet[0]) //just use the first independentSet
-      removeVertexFromGraphSet(vertex, graph); // fixed it
-  }
+  while (!canColorWith(chi, graph))
+    chi++;
 
-  //recursive call
-  counter++;
-  findChromaticNumber(graph, counter);
+  return chi;
 }
 
 // ------------------------------------------------------------------------
@@ -583,6 +580,44 @@ void Graph::recursiveDominatingSet(vector<int>& set, int l, int s,
 }
 
 // ------------------------------------------------------------------------
+// findKPartite: finds the k-partite number, ie, the minimum number of distinct
+//  independent sets in the graph
+// returns an int
+// ------------------------------------------------------------------------
+int Graph::findKPartite()
+{
+  int c = 0;
+  return findKPartite(graphSet, c);
+}
+
+// ------------------------------------------------------------------------
+// findKPartite: finds the k-partite number, ie, the minimum number of distinct
+//  independent sets in the graph
+// graph: graph to check
+// counter: k-partite number
+// returns an int
+// ------------------------------------------------------------------------
+int Graph::findKPartite(GraphSet graph, int& counter)
+{
+  if (graph.vertexSet.empty())
+    return counter;
+
+  //calculate independence set
+  vector<vector<int > > independentSet = findMaximumIndependentSets(graph, 1);
+
+  if (!independentSet.empty())
+  {
+    for (auto& vertex : independentSet[0]) //just use the first independentSet
+      removeVertexFromGraphSet(vertex, graph); // fixed it
+  }
+
+  //recursive call
+  counter++;
+  return findKPartite(graph, counter);
+}
+
+
+// ------------------------------------------------------------------------
 // sortEdgeSetByWeightNonDecreasing: Sorts an edge set by weight
 // edgeSet: edge set to be sorted
 // ------------------------------------------------------------------------
@@ -626,6 +661,34 @@ void Graph::sortVertexSetByDegreeNonDecreasing(vector<Vertex> &vertexSet)
     // Loop through elements and check for an element less than max
     for (int j = i + 1; j < vertexSet.size(); j++)
       if (vertexSet[j].getDegree() < vertexSet[max].getDegree())
+        max = j;
+
+    // If the maximum element is NOT what we started with, we must swap
+    if (max != i)
+    {
+      temp = vertexSet[i];
+      vertexSet[i] = vertexSet[max];
+      vertexSet[max] = temp;
+    }
+  }
+}
+
+// ------------------------------------------------------------------------
+// sortVertexSetByDegreeNonIncreasing: Sorts a vertex set by degree
+// vertexSet: vertex set to be sorted
+// ------------------------------------------------------------------------
+void Graph::sortVertexSetByDegreeNonIncreasing(vector<Vertex> &vertexSet)
+{
+  Vertex temp;
+  int max;
+  for (int i = 0; i < vertexSet.size() - 1; i++)
+  {
+    // Start with the first element as the maximum
+    max = i;
+
+    // Loop through elements and check for an element less than max
+    for (int j = i + 1; j < vertexSet.size(); j++)
+      if (vertexSet[j].getDegree() > vertexSet[max].getDegree())
         max = j;
 
     // If the maximum element is NOT what we started with, we must swap
@@ -1018,9 +1081,60 @@ bool Graph::isDominatingSet(vector<int> set)
       }
     }
   }
-
   return vertexSetEqual(ngs, graphSet.vertexSet);
+}
 
+// ------------------------------------------------------------------------
+// canColorWith: returns true if there is enough colors for a proper coloring
+//  of this graph
+// c: amount of colors
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::canColorWith(int c)
+{
+  return canColorWith(c, graphSet);
+}
+
+// ------------------------------------------------------------------------
+// canColorWith: returns true if there is enough colors for a proper coloring
+// c: amount of colors
+// graph: graph to color
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::canColorWith(int c, GraphSet graph)
+{
+  vector<Vertex> v_set = graph.vertexSet;
+  sortVertexSetByDegreeNonIncreasing(v_set);
+  for (int i = 1; i <= c; i++)
+  {
+    vector<int> cannotColor;
+
+    for (int v = 0; v < v_set.size(); v++)
+      if (v_set[v].getColor() <= 0 && !Tools::isInSet(cannotColor,
+        v_set[v].getId()))
+      {
+        vector<int> v_vec;
+        v_vec.push_back(v_set[v].getId());
+        v_set[v].setColor(i);
+        cannotColor = Tools::setUnion(cannotColor, v_set[v].getNeighbors());
+        cannotColor = Tools::setUnion(cannotColor, v_vec);
+      }
+  }
+  graph.vertexSet = v_set;
+  return isGraphColored(graph);
+}
+
+// ------------------------------------------------------------------------
+// isGraphColored: returns true if each vertex color value is greater than 0
+// graph: graph in question!
+// returns a bool
+// ------------------------------------------------------------------------
+bool Graph::isGraphColored(GraphSet graph)
+{
+  for (int i = 0; i < graph.vertexSet.size(); i++)
+    if (graph.vertexSet[i].getColor() <= 0)
+      return false;
+  return true;
 }
 
 // ------------------------------------------------------------------------
@@ -1087,9 +1201,4 @@ int Graph::getAverageDegree() const
 {
   return Tools::findAverage(degreeSequence, graphSet.vertexSet.size());
 }
-
 Graph::GraphSet Graph::getGraphSet() const { return graphSet; }
-
-int Graph::getChromaticNumber() const { return chromaticNumber; }
-
-void Graph::setChromaticNumber(int n) { chromaticNumber = n; }

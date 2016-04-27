@@ -48,14 +48,19 @@ class Graph
     void bronKerbosch(std::vector<int>, std::vector<int>, std::vector<int>,
       std::vector<std::vector<int> >&, bool&);
 
-    void findChromaticNumber(GraphSet, int);
+    int findChromaticNumber();
+    int findChromaticNumber(GraphSet);
 
     std::vector<std::vector<int> > findMinimumDominatingSets(int);
     void recursiveDominatingSet(std::vector<int>&, int, int, std::vector<int>&,
       std::vector<std::vector<int> >&, int&, bool&);
 
+    int findKPartite();
+    int findKPartite(GraphSet, int&);
+
     void sortEdgeSetByWeightNonDecreasing(std::vector<Edge>&);
     void sortVertexSetByDegreeNonDecreasing(std::vector<Vertex>&);
+    void sortVertexSetByDegreeNonIncreasing(std::vector<Vertex>&);
 
     // Functions
     bool isTreeAfterAdding(Edge, GraphSet, GraphSet);
@@ -80,6 +85,9 @@ class Graph
     bool isIndependentSet(std::vector<int>);
     bool isIndependentSet(std::vector<int>, GraphSet);
     bool isDominatingSet(std::vector<int>);
+    bool canColorWith(int);
+    bool canColorWith(int, GraphSet);
+    bool isGraphColored(GraphSet);
 
     // Accessors
     int getEdgeNum() const;
@@ -95,12 +103,9 @@ class Graph
     int getMaxDegree() const;
     int getMinDegree() const;
     int getAverageDegree() const;
-    void setChromaticNumber(int);
-    int getChromaticNumber() const;
     GraphSet getGraphSet() const;
 
   private:
-    int chromaticNumber;
     std::vector<int> degreeSequence;
     GraphSet graphSet;
 };
