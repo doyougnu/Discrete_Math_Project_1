@@ -92,7 +92,7 @@ int main (int argc, char *argv[], char *envp[])
   cout << "------------------------------------------------------------" << endl
        << "                Discrete Mathematics Project" << endl
        << "                             by" << endl
-       << "            Tanner G, Jeff Y, Micah J, Mitchell O" << endl
+       << "    Tanner G, Jeff Y, Micah J, Mitchell O, Zach Fresquez" << endl
        << "------------------------------------------------------------" << endl
        << "Enter graph filename (with extension): ";
 
@@ -252,18 +252,6 @@ int main (int argc, char *argv[], char *envp[])
             cin >> id;
           }
           if (graph.isDominatingSet(fs))
-            cout << "Yes!" << endl;
-          else
-            cout << "No!" << endl;
-          break;
-        }
-        case 202: // testing stuff
-        {
-          cout << "WOW! You found the secret testing command." << endl;
-          int chiX = 0;
-          cout << "# of colors: ";
-          cin >> chiX;
-          if (graph.canColorWith(chiX))
             cout << "Yes!" << endl;
           else
             cout << "No!" << endl;

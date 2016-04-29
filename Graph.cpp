@@ -511,14 +511,15 @@ int Graph::findChromaticNumber()
 // ------------------------------------------------------------------------
 int Graph::findChromaticNumber(GraphSet graph)
 {
-  int chi = 2;
-  if (graph.edgeSet.empty())
-    chi = 1;
-
-  while (!canColorWith(chi, graph))
-    chi++;
-
-  return chi;
+  int v = graph.vertexSet.size(),
+      min = findMColoring(graph, 0);
+  for (int i = 1; i < v; i++)
+  {
+    int c = findMColoring(graph, i);
+    if (c < min)
+      min = c;
+  }
+  return min;
 }
 
 // ------------------------------------------------------------------------
@@ -1088,40 +1089,49 @@ bool Graph::isDominatingSet(vector<int> set)
 // canColorWith: returns true if there is enough colors for a proper coloring
 //  of this graph
 // c: amount of colors
-// returns a bool
+// returns a int
 // ------------------------------------------------------------------------
-bool Graph::canColorWith(int c)
+int Graph::findMColoring(int s)
 {
-  return canColorWith(c, graphSet);
+  return findMColoring(graphSet, s);
 }
 
 // ------------------------------------------------------------------------
-// canColorWith: returns true if there is enough colors for a proper coloring
+// findMColoring: finds the amount of colors used in a proper coloring using
+//  the welsh-powell algorithm
 // c: amount of colors
 // graph: graph to color
-// returns a bool
+// start: vertex to start on
+// returns a int
 // ------------------------------------------------------------------------
-bool Graph::canColorWith(int c, GraphSet graph)
+int Graph::findMColoring(GraphSet graph, int start)
 {
   vector<Vertex> v_set = graph.vertexSet;
-  sortVertexSetByDegreeNonIncreasing(v_set);
-  for (int i = 1; i <= c; i++)
+  int c = 1;
+  while (!isGraphColored(graph))
   {
     vector<int> cannotColor;
 
-    for (int v = 0; v < v_set.size(); v++)
+    int visited = 0;
+    for (int v = start; visited < v_set.size(); v++)
+    {
       if (v_set[v].getColor() <= 0 && !Tools::isInSet(cannotColor,
         v_set[v].getId()))
       {
         vector<int> v_vec;
         v_vec.push_back(v_set[v].getId());
-        v_set[v].setColor(i);
+        v_set[v].setColor(c);
         cannotColor = Tools::setUnion(cannotColor, v_set[v].getNeighbors());
         cannotColor = Tools::setUnion(cannotColor, v_vec);
       }
+      if (v == v_set.size() - 1)
+        v = -1;
+      visited++;
+    }
+    graph.vertexSet = v_set;
+    c++;
   }
-  graph.vertexSet = v_set;
-  return isGraphColored(graph);
+  return --c; // that last iteration!
 }
 
 // ------------------------------------------------------------------------
