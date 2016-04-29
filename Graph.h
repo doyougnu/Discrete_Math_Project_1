@@ -85,9 +85,8 @@ class Graph
     bool isIndependentSet(std::vector<int>);
     bool isIndependentSet(std::vector<int>, GraphSet);
     bool isDominatingSet(std::vector<int>);
-    int findMColoring(int);
-    int findMColoring(GraphSet, int);
-    bool isGraphColored(GraphSet);
+    int findMColoring(std::vector<Vertex>, int);
+    bool isGraphColored(std::vector<Vertex>);
 
     // Accessors
     int getEdgeNum() const;

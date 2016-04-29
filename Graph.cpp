@@ -511,11 +511,13 @@ int Graph::findChromaticNumber()
 // ------------------------------------------------------------------------
 int Graph::findChromaticNumber(GraphSet graph)
 {
+  vector<Vertex> v_set = graph.vertexSet;
+  sortVertexSetByDegreeNonIncreasing(v_set);
   int v = graph.vertexSet.size(),
-      min = findMColoring(graph, 0);
+      min = findMColoring(v_set, 0);
   for (int i = 1; i < v; i++)
   {
-    int c = findMColoring(graph, i);
+    int c = findMColoring(v_set, i);
     if (c < min)
       min = c;
   }
@@ -1086,17 +1088,6 @@ bool Graph::isDominatingSet(vector<int> set)
 }
 
 // ------------------------------------------------------------------------
-// canColorWith: returns true if there is enough colors for a proper coloring
-//  of this graph
-// c: amount of colors
-// returns a int
-// ------------------------------------------------------------------------
-int Graph::findMColoring(int s)
-{
-  return findMColoring(graphSet, s);
-}
-
-// ------------------------------------------------------------------------
 // findMColoring: finds the amount of colors used in a proper coloring using
 //  the welsh-powell algorithm
 // c: amount of colors
@@ -1104,11 +1095,10 @@ int Graph::findMColoring(int s)
 // start: vertex to start on
 // returns a int
 // ------------------------------------------------------------------------
-int Graph::findMColoring(GraphSet graph, int start)
+int Graph::findMColoring(vector<Vertex> v_set, int start)
 {
-  vector<Vertex> v_set = graph.vertexSet;
   int c = 1;
-  while (!isGraphColored(graph))
+  while (!isGraphColored(v_set))
   {
     vector<int> cannotColor;
 
@@ -1128,7 +1118,6 @@ int Graph::findMColoring(GraphSet graph, int start)
         v = -1;
       visited++;
     }
-    graph.vertexSet = v_set;
     c++;
   }
   return --c; // that last iteration!
@@ -1139,10 +1128,10 @@ int Graph::findMColoring(GraphSet graph, int start)
 // graph: graph in question!
 // returns a bool
 // ------------------------------------------------------------------------
-bool Graph::isGraphColored(GraphSet graph)
+bool Graph::isGraphColored(vector<Vertex> graph)
 {
-  for (int i = 0; i < graph.vertexSet.size(); i++)
-    if (graph.vertexSet[i].getColor() <= 0)
+  for (int i = 0; i < graph.size(); i++)
+    if (graph[i].getColor() <= 0)
       return false;
   return true;
 }
