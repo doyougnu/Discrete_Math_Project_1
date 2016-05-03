@@ -175,6 +175,12 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 3:
         {
+          if (graph.isTree(graph.getGraphSet()))
+          {
+            cout << "Already a tree!" << endl;
+            break;
+
+          }
           cout << endl << "Prim's Algorithm" << endl;
           Graph::GraphSet result = graph.findMinimumSpanningTree(0, true);
           if (graph.isSpanningTree(result))
@@ -224,7 +230,7 @@ int main (int argc, char *argv[], char *envp[])
         }
         case 9:
         {
-          cout << "k-partite = " << graph.findKPartite() << endl;
+          cout << "k-partite? = " << graph.findKPartite() << endl;
           break;
         }
         case 10:
