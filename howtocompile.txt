@@ -1,0 +1,2 @@
+Use make
+https://en.wikipedia.org/wiki/Make_%28software%29
